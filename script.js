@@ -1,5 +1,3 @@
-// File: script.js (Revisi)
-
 document.addEventListener('DOMContentLoaded', () => {
     const hijabGrid = document.getElementById('hijab-grid');
     const eksklusifGrid = document.getElementById('eksklusif-grid');
@@ -11,17 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(videos => {
             for (const video of videos) {
-                // PERUBAHAN UTAMA ADA DI SINI, PADA BAGIAN href
                 const posterCardHTML = `
                     <a href="nonton.html?id=${video.id}" class="poster-card">
                         <img src="${video.thumbnail}" alt="${video.title}">
-                        <div class="poster-overlay">
-                            <i class="fas fa-play-circle"></i>
-                        </div>
+                        <div class="poster-overlay"><i class="fas fa-play-circle"></i></div>
                         <div class="poster-title">${video.title}</div>
                     </a>
                 `;
-
                 if (video.category === 'hijab' && hijabCount < limitPerCategory) {
                     hijabGrid.innerHTML += posterCardHTML;
                     hijabCount++;
