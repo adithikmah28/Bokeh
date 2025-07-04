@@ -34,5 +34,14 @@
     "iframe_url": "https://www.youtube.com/embed/ivYQi3j3Iac",
     "description": "Suasana cozy dan menenangkan dari tetesan air hujan di jendela. Sempurna untuk teman belajar atau bersantai.",
     "tags": ["suasana", "hujan", "cozy", "asmr"]
+  },
+  {
+    "id": 5,
+    "title": "Senyum Manis",
+    "category": "hijab",
+    "thumbnail": "https://images.pexels.com/photos/1042523/pexels-photo-1042523.jpeg?auto=compress&cs=tinysrgb&w=400",
+    "iframe_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "description": "Deskripsi untuk Senyum Manis.",
+    "tags": ["hijab", "senyum", "manis"]
   }
 ]
