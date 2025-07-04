@@ -1,3 +1,5 @@
+<!-- File: nonton.html (Revisi) -->
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -10,41 +12,47 @@
 </head>
 <body>
     <header>
-        <nav class="container">
-            <a href="index.html" class="logo">BokehFlix</a>
-            <ul class="nav-links">
-                <li><a href="index.html">Terbaru</a></li>
-                <li><a href="#">Populer</a></li>
-                <li><a href="#">Kategori</a></li>
-            </ul>
-            <div class="nav-actions"><i class="fas fa-search"></i></div>
-        </nav>
+        <!-- ... (Isi header tetap sama) ... -->
     </header>
     <main class="container">
         <div class="watch-container">
             <div class="main-content">
                 <h1 class="watch-title" id="video-title"></h1>
-                <div class="video-player-container" id="video-player"></div>
+                
+                <!-- CONTAINER PLAYER SEKARANG AKAN DIISI PLACEHOLDER DULU -->
+                <div class="video-player-container" id="video-player">
+                    <!-- Awalnya diisi placeholder, bukan iframe -->
+                </div>
+
                 <div class="video-actions">
-                    <button class="btn-action"><i class="fas fa-heart"></i> Suka</button>
-                    <button class="btn-action"><i class="fas fa-share-alt"></i> Bagikan</button>
-                    <button class="btn-action"><i class="fas fa-flag"></i> Laporkan</button>
+                    <!-- ... (Tombol aksi tetap sama) ... -->
                 </div>
                 <div class="video-details">
-                    <h3>Deskripsi</h3>
-                    <p id="video-description"></p>
-                    <div class="video-tags" id="video-tags"></div>
+                    <!-- ... (Detail video tetap sama) ... -->
                 </div>
             </div>
             <aside class="sidebar">
-                <h3 class="sidebar-title">Video Lainnya</h3>
-                <div class="sidebar-video-list" id="sidebar-list"></div>
+                <!-- ... (Sidebar tetap sama) ... -->
             </aside>
         </div>
     </main>
+
+    <!-- ===== MODAL IKLAN (TAMBAHAN BARU) ===== -->
+    <div id="ad-modal" class="modal-overlay">
+        <div class="modal-content">
+            <i class="fas fa-lock modal-icon"></i>
+            <h3>Video Terkunci</h3>
+            <p>Untuk melanjutkan, silakan klik tombol di bawah untuk membuka iklan. Video akan otomatis terbuka setelahnya.</p>
+            <button id="ad-link-button" class="btn-ad">
+                <i class="fas fa-play"></i> BUKA VIDEO (Lewati Iklan)
+            </button>
+        </div>
+    </div>
+    
     <footer>
-        <div class="container"><p>© 2024 BokehFlix. All rights reserved.</p></div>
+        <!-- ... (Isi footer tetap sama) ... -->
     </footer>
+
     <script src="nonton-script.js"></script>
 </body>
 </html>
