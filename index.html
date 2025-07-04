@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <header>
         <nav class="container">
             <a href="index.html" class="logo">BokehFlix</a>
@@ -21,39 +20,23 @@
             <div class="nav-actions"><i class="fas fa-search"></i></div>
         </nav>
     </header>
-
     <main>
         <section class="poster-section container">
-            
-            <!-- Kategori Hijab -->
             <div class="section-header">
                 <h2 class="section-title">Hijab</h2>
-                <a href="kategori-hijab.html" class="more-link">Lihat Lainnya ></a>
+                <a href="kategori.html?cat=hijab" class="more-link">Lihat Lainnya ></a>
             </div>
-            <!-- WADAH KOSONG UNTUK POSTER HIJAB -->
-            <div class="poster-grid" id="hijab-grid">
-                <!-- Poster akan dimuat oleh JavaScript di sini -->
-            </div>
-
-            <!-- Kategori Eksklusif -->
+            <div class="poster-grid" id="hijab-grid"></div>
             <div class="section-header" style="margin-top: 40px;">
                 <h2 class="section-title">Koleksi Eksklusif</h2>
-                <a href="#" class="more-link">Lihat Lainnya ></a>
+                <a href="kategori.html?cat=eksklusif" class="more-link">Lihat Lainnya ></a>
             </div>
-            <!-- WADAH KOSONG UNTUK POSTER EKSKLUSIF -->
-            <div class="poster-grid" id="eksklusif-grid">
-                <!-- Poster akan dimuat oleh JavaScript di sini -->
-            </div>
-
+            <div class="poster-grid" id="eksklusif-grid"></div>
         </section>
     </main>
-
     <footer>
         <div class="container"><p>© 2024 BokehFlix. All rights reserved.</p></div>
     </footer>
-
-    <!-- Sambungkan ke file JavaScript -->
     <script src="script.js"></script>
-
 </body>
 </html>
