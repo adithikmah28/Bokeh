@@ -39,6 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
         videoArray.forEach(video => {
             const videoCard = document.createElement('div');
             videoCard.className = 'video-card';
+            // PERUBAHAN PENTING: Tambahkan data-id di sini untuk identifikasi
+            videoCard.dataset.id = video.id; 
             videoCard.innerHTML = `
                 <div class="card-banner">
                     <img src="${video.poster}" alt="${video.title} Poster" loading="lazy">
@@ -48,9 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p>${video.title}</p>
                 </div>`;
             
-            videoCard.addEventListener('click', () => {
-                openDetailModal(video);
-            });
+            // Kita TIDAK lagi menambahkan event listener di sini
             videoGrid.appendChild(videoCard);
         });
     }
@@ -112,6 +112,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 4. EVENT LISTENERS ---
     
+    // === INI ADALAH PERBAIKAN UTAMA (EVENT DELEGATION) ===
+    videoGrid.addEventListener('click', (e) => {
+        // Cari elemen .video-card terdekat dari elemen yang di-klik
+        const card = e.target.closest('.video-card');
+        
+        // Jika kartu ditemukan (artinya kita mengklik poster)
+        if (card) {
+            const videoId = card.dataset.id;
+            const video = currentVideos.find(v => v.id === videoId);
+            if (video) {
+                openDetailModal(video);
+            }
+        }
+    });
+
     desktopSearchInput.addEventListener('input', handleSearchInput);
     mobileSearchInput.addEventListener('input', handleSearchInput);
 
