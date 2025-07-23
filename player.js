@@ -1,65 +1,45 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    // --- DOM Elements ---
-    const playerContainer = document.querySelector('.player-container');
+    // --- DOM Elements & API Config ---
+    const API_DETAIL_URL = "https://avdbapi.com/api.php/provide/vod/?ac=detail&ids=";
     const videoTitle = document.getElementById('videoTitle');
     const videoActress = document.getElementById('videoActress');
-    const iframePlayer = document.getElementById('videoPlayerIframe');
-
-    // --- Data Files ---
-    const dataFiles = ['data/censored.json', 'data/uncensored.json'];
-
-    function displayError(message) {
-        if (playerContainer) {
-            playerContainer.innerHTML = `
-                <div class="player-header">
-                    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Gallery</a>
-                </div>
-                <div class="error-message-container">
-                    <h1><i class="fas fa-exclamation-triangle"></i> Playback Error</h1>
-                    <p>${message}</p>
-                </div>
-            `;
-        }
-    }
-
-    async function findVideoById(id) {
-        for (const file of dataFiles) {
-            try {
-                const response = await fetch(file);
-                if (!response.ok) continue;
-                const videos = await response.json();
-                const foundVideo = videos.find(video => video.id === id);
-                if (foundVideo) return foundVideo;
-            } catch (error) {
-                console.error(`Error processing ${file}:`, error);
-                continue;
-            }
-        }
-        return null;
-    }
+    const videoPlayerWrapper = document.getElementById('videoPlayerWrapper');
+    const videoPlayer = document.getElementById('videoPlayer');
 
     // --- Main Logic ---
+    const urlParams = new URLSearchParams(window.location.search);
+    const videoId = urlParams.get('id');
+
+    if (!videoId) {
+        // ... (displayError function)
+        return;
+    }
+
     try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const videoId = urlParams.get('id'); 
+        const response = await fetch(`${API_DETAIL_URL}${videoId}`);
+        const data = await response.json();
+        if (!data.list || data.list.length === 0) throw new Error("Video not found.");
 
-        if (!videoId) {
-            throw new Error("Video ID was not provided in the URL.");
+        const video = data.list[0];
+        document.title = `${video.vod_name} | MiyabiFlix`;
+        videoTitle.textContent = video.vod_name;
+        videoActress.textContent = video.vod_actor || 'N/A';
+
+        // Logika HLS.js untuk memutar .m3u8
+        const playUrlString = video.vod_play_url;
+        // Ambil URL dari format 'BD$$$url#HD$$$url'
+        const m3u8Url = playUrlString.split('$$$')[1].split('#')[0];
+
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(m3u8Url);
+            hls.attachMedia(videoPlayer);
+        } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+            videoPlayer.src = m3u8Url;
         }
-
-        const video = await findVideoById(videoId);
-
-        if (!video) {
-            throw new Error(`Video with ID "${videoId}" could not be found.`);
-        }
-
-        document.title = `${video.title} | MiyabiFlix`;
-        videoTitle.textContent = video.title;
-        videoActress.textContent = video.actors.join(', ');
-        iframePlayer.src = video.iframe_url;
 
     } catch (error) {
-        console.error("Player Initialization Error:", error);
-        displayError(error.message);
+        console.error("Player Error:", error);
+        // ... (displayError function)
     }
 });
