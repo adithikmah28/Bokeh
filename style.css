@@ -32,7 +32,7 @@ img { max-width: 100%; display: block; }
 .desktop-search-container { flex-grow: 1; max-width: 400px; }
 .search-container:focus-within { border-color: var(--primary-color); }
 .search-input { background: none; border: none; color: white; padding: 8px 0; outline: none; width: 100%; }
-.mobile-search-container { display: none; } /* Sembunyikan di desktop */
+.mobile-search-container { display: none; }
 .action-btn { background: none; border: none; color: var(--text-muted); font-size: 1.1rem; cursor: pointer; padding: 8px; }
 
 /* --- BUTTONS --- */
@@ -48,54 +48,86 @@ main { padding-top: 40px; }
 .filter-btn { background: var(--bg-color); color: var(--text-muted); padding: 6px 14px; border: 1px solid #333; border-radius: 20px; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem; }
 .filter-btn.active, .filter-btn:hover { background-color: var(--primary-color); color: #000; border-color: var(--primary-color); font-weight: 600; }
 
-/* --- VIDEO GRID --- */
+/* --- VIDEO GRID & CARDS --- */
 .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
 .no-results { grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 40px; }
-.video-card { background-color: transparent; cursor: pointer; transition: transform 0.2s ease; }
+.video-card { background-color: transparent; cursor: pointer; transition: transform 0.2s ease; display: flex; flex-direction: column; }
 .video-card:hover { transform: scale(1.05); z-index: 10; }
 .card-banner { position: relative; overflow: hidden; border-radius: var(--border-radius); background-color: #222; }
 .card-banner img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; }
 .card-content { padding: 10px 5px 0 5px; }
-.card-content h3 { font-size: 0.9rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card-content p { color: var(--text-muted); font-size: 0.8rem; height: 38px; overflow: hidden; }
+.card-title, .card-actors { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-title { font-size: 0.95rem; font-weight: 500; color: #fff; margin-bottom: 4px; }
+.card-actors { font-size: 0.85rem; color: var(--text-muted); }
 
-/* --- Sisa Style (MODAL, PLAYER, ERROR) Tetap Sama --- */
-/* (Tidak perlu diubah) */
+/* --- MODAL --- */
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
+.modal.active { display: flex; justify-content: center; align-items: center; }
+.modal-content { background: var(--bg-color); margin: auto; padding: 25px; border: 1px solid #333; width: 90%; max-width: 500px; border-radius: var(--border-radius); position: relative; animation: modal-fade-in 0.3s ease; }
+@keyframes modal-fade-in { from {transform: scale(0.9); opacity: 0;} to {transform: scale(1); opacity: 1;} }
+.close-modal-btn { color: var(--text-muted); position: absolute; top: 10px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer; }
 
-/* === RESPONSIVE DESIGN (PERUBAHAN BESAR) === */
+/* --- CUSTOM MODAL DETAIL STYLES --- */
+.modal-content.detail-modal-content { max-width: 700px; background-color: #1f2024; border: 1px solid #333; padding: 30px; }
+.modal-poster { width: 100%; margin-bottom: 25px; border-radius: var(--border-radius); overflow: hidden; }
+.modal-poster img { width: 100%; display: block; }
+.modal-main-title { font-size: 1.8rem; font-weight: 700; line-height: 1.3; color: #fff; margin-bottom: 20px; }
+.btn-watch-online { display: inline-block; background-color: #1db954; color: #fff; padding: 12px 28px; border-radius: 8px; font-weight: 600; text-decoration: none; margin-bottom: 30px; transition: background-color 0.2s; }
+.btn-watch-online:hover { background-color: #1ed760; }
+.modal-info-section { margin-bottom: 15px; }
+.info-label { display: block; font-size: 1rem; font-weight: 600; color: #4bd3be; margin-bottom: 8px; }
+.tag-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag-item { background-color: #6c5ce7; color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.9rem; font-weight: 500; }
+.tag-item.searchable { cursor: pointer; transition: background-color 0.2s, transform 0.2s; }
+.tag-item.searchable:hover { background-color: #8b7eff; transform: translateY(-2px); }
+.meta-list { margin-top: 25px; font-size: 1rem; line-height: 1.8; }
+.meta-list .info-label { display: inline-block; width: 120px; margin-bottom: 0; }
+.meta-value { color: #fff; }
+
+/* --- FOOTER --- */
+.footer { padding-top: 40px; }
+.age-notice { text-align: center; padding: 15px; margin-bottom: 30px; border: 1px solid var(--text-muted); border-radius: var(--border-radius); color: var(--text-muted); font-size: 0.9rem; }
+.age-notice i { margin-right: 10px; color: var(--primary-color); }
+.footer-copyright { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-top: 20px; border-top: 1px solid var(--bg-color); padding-top: 20px; }
+
+/* --- PLAYER PAGE STYLES --- */
+.player-page-body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #000; }
+.player-container { width: 100%; max-width: 1200px; padding: 20px; }
+.player-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.player-header h1 { color: var(--primary-color); font-size: 1.5rem; }
+.back-btn { color: var(--text-muted); font-size: 1rem; text-decoration: none; transition: color 0.3s; }
+.back-btn:hover { color: var(--primary-color); }
+.iframe-container { position: relative; width: 100%; padding-top: 56.25%; background-color: #000; border-radius: var(--border-radius); overflow: hidden; }
+.iframe-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+.video-info { margin-top: 20px; }
+.video-info h2 { font-size: 1.2rem; font-weight: 500; }
+.video-info h2 span { font-weight: 400; color: var(--text-muted); }
+
+/* --- PLAYER ERROR STYLES --- */
+.error-message-container { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background-color: var(--bg-color); border-radius: var(--border-radius); padding: 40px; margin-top: 20px; border: 1px solid #444; min-height: 300px; }
+.error-message-container h1 { color: #ff5555; font-size: 1.8rem; margin-bottom: 15px; }
+.error-message-container h1 i { margin-right: 10px; }
+.error-message-container p { font-size: 1.1rem; color: var(--text-muted); max-width: 500px; }
+
+/* --- RESPONSIVE DESIGN --- */
 @media (max-width: 992px) {
-    .desktop-search-container { display: none; } /* Sembunyikan search desktop */
-    .nav-menu {
-        position: absolute;
-        left: -100%;
-        top: 65px; /* Sesuaikan dengan tinggi header */
-        flex-direction: column;
-        background-color: #181818;
-        width: 100%;
-        text-align: center;
-        transition: 0.3s;
-        gap: 0;
-        padding: 10px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
+    .desktop-search-container { display: none; }
+    .nav-menu { position: absolute; left: -100%; top: 65px; flex-direction: column; background-color: #181818; width: 100%; text-align: center; transition: 0.3s; gap: 0; padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
     .nav-menu.active { left: 0; }
     .nav-item { width: 100%; padding: 1rem 0; }
     .nav-item:not(.mobile-search-container) { border-top: 1px solid #333; }
-    .nav-actions { display: none; } /* Sembunyikan tombol login desktop */
-    .hamburger { display: block; } /* Tampilkan hamburger */
+    .nav-actions { display: none; }
+    .hamburger { display: block; }
     .hamburger.active .bar:nth-child(2) { opacity: 0; }
     .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
     .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-    .mobile-search-container { display: block; padding: 10px 20px; } /* Tampilkan search mobile */
+    .mobile-search-container { display: block; padding: 10px 20px; }
 }
 
-/* KUNCI: UKURAN POSTER UNTUK MOBILE */
 @media (max-width: 768px) {
-    /* 3 kolom untuk tablet portrait & hp besar */
     .video-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
 }
 
 @media (max-width: 480px) {
-    /* 2 kolom untuk hp kecil */
     .video-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
 }
