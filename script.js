@@ -1,31 +1,53 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // DOM Elements
+    // --- 1. Konfigurasi API ---
+    const API_BASE_URL = "https://avdbapi.com/api.php/provide/vod/";
+
+    // --- 2. DOM Elements ---
     const videoGrid = document.getElementById('videoGrid');
     const filterButtons = document.querySelectorAll('.filter-btn');
-    const desktopSearchInput = document.getElementById('desktopSearchInput');
-    const mobileSearchInput = document.getElementById('mobileSearchInput');
-    const modal = document.getElementById('modal');
-    const modalBody = document.getElementById('modalBody');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-    let currentVideos = [];
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const prevPageBtn = document.getElementById('prevPageBtn');
+    const nextPageBtn = document.getElementById('nextPageBtn');
+    const currentPageSpan = document.getElementById('currentPageSpan');
+    // ... sisa elemen modal
 
-    // Functions
-    async function loadVideos(jsonFilename) {
-        const filePath = `data/${jsonFilename}`;
-        videoGrid.innerHTML = `<p class="no-results">Loading...</p>`;
+    // --- 3. State Management ---
+    let currentPage = 1;
+    let currentFilterType = 'latest';
+    let currentFilterValue = '';
+    let totalPages = 1;
+
+    // --- 4. Fungsi Inti ---
+
+    /** Fungsi utama untuk mengambil data dari API */
+    async function fetchVideos(page = 1) {
+        videoGrid.innerHTML = '<div class="loading-spinner"></div>';
+        
+        let url = `${API_BASE_URL}?ac=detail&pg=${page}`;
+
+        if (currentFilterType === 'category') {
+            url = `${API_BASE_URL}?ac=detail&t=${currentFilterValue}&pg=${page}`;
+        } else if (currentFilterType === 'search') {
+            url = `${API_BASE_URL}?ac=detail&wd=${currentFilterValue}&pg=${page}`;
+        }
+
         try {
-            const response = await fetch(filePath);
-            if (!response.ok) throw new Error(`HTTP 404: ${filePath} not found.`);
-            currentVideos = await response.json();
-            displayVideos(currentVideos);
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("Network response was not ok.");
+            
+            const data = await response.json();
+            totalPages = data.pagecount;
+            displayVideos(data.list);
+            updatePagination(data.page, data.pagecount);
+
         } catch (error) {
-            console.error(error);
-            videoGrid.innerHTML = `<p class="no-results">Failed to load videos. Check console.</p>`;
+            console.error("Fetch Error:", error);
+            videoGrid.innerHTML = `<p class="no-results">Failed to load videos.</p>`;
         }
     }
 
+    /** Fungsi untuk menampilkan video ke grid */
     function displayVideos(videoArray) {
         videoGrid.innerHTML = '';
         if (!videoArray || videoArray.length === 0) {
@@ -35,75 +57,77 @@ document.addEventListener('DOMContentLoaded', () => {
         videoArray.forEach(video => {
             const card = document.createElement('div');
             card.className = 'video-card';
-            card.dataset.id = video.id;
+            card.dataset.id = video.vod_id; // Simpan ID untuk modal
             card.innerHTML = `
                 <div class="card-banner">
-                    <img src="${video.poster}" alt="${video.title}" loading="lazy">
+                    <img src="${video.vod_pic}" alt="${video.vod_name}" loading="lazy">
                 </div>
                 <div class="card-content">
-                    <h3 class="card-title">${video.title}</h3>
-                    <p class="card-actors">${video.actors.join(', ')}</p>
+                    <h3 class="card-title">${video.vod_name}</h3>
+                    <p class="card-actors">${video.vod_actor || 'N/A'}</p>
                 </div>
             `;
             videoGrid.appendChild(card);
         });
     }
 
-    function openDetailModal(video) {
-        // ... (Fungsi ini sama seperti sebelumnya, tidak perlu diubah)
-        const createSearchableTag = (type, value) => `<a href="#" class="tag-item searchable" data-type="${type}" data-value="${value}">${value}</a>`;
-        modalBody.innerHTML = `<h2 class="modal-main-title">${video.title}</h2><div class="modal-poster"><img src="${video.poster}" alt="${video.title}"></div><a href="player.html?id=${video.id}" target="_blank" class="btn-watch-online">Watch Online</a><div class="modal-info-section"><span class="info-label">ID Code:</span><div class="tag-group">${createSearchableTag('id', video.id)}</div></div><div class="modal-info-section"><span class="info-label">Categories:</span><div class="tag-group">${video.categories.map(cat => createSearchableTag('category', cat)).join('')}</div></div><div class="modal-info-section"><span class="info-label">Actor:</span><div class="tag-group">${video.actors.map(actor => createSearchableTag('actor', actor)).join('')}</div></div><div class="meta-list"><div><span class="info-label">Year:</span> <span class="meta-value">${video.year}</span></div></div>`;
-        modal.classList.add('active');
+    /** Fungsi untuk memperbarui tombol paginasi */
+    function updatePagination(page, pagecount) {
+        currentPage = parseInt(page);
+        totalPages = parseInt(pagecount);
+        currentPageSpan.textContent = `Page ${currentPage}`;
+        prevPageBtn.disabled = currentPage <= 1;
+        nextPageBtn.disabled = currentPage >= totalPages;
     }
 
-    function closeModal() { modal.classList.remove('active'); }
+    // --- 5. Event Listeners ---
 
-    function performSearch(query) {
-        const searchResult = currentVideos.filter(v => v.actors.includes(query) || v.categories.includes(query) || v.id === query);
-        displayVideos(searchResult);
-    }
-    
-    function handleSearchInput(e) {
-        const query = e.target.value.toLowerCase();
-        desktopSearchInput.value = query;
-        mobileSearchInput.value = query;
-        const result = currentVideos.filter(v => v.title.toLowerCase().includes(query) || v.id.toLowerCase().includes(query) || v.actors.some(a => a.toLowerCase().includes(query)));
-        displayVideos(result);
-    }
-
-    // Event Listeners
+    // Klik pada kartu video
     videoGrid.addEventListener('click', e => {
         const card = e.target.closest('.video-card');
         if (card) {
-            const video = currentVideos.find(v => v.id === card.dataset.id);
-            if (video) openDetailModal(video);
+            window.open(`player.html?id=${card.dataset.id}`, '_blank');
         }
     });
+
+    // Filter kategori
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            currentFilterType = btn.dataset.type;
+            currentFilterValue = btn.dataset.id;
+            currentPage = 1;
+            fetchVideos(currentPage);
+        });
+    });
+
+    // Pencarian
+    searchBtn.addEventListener('click', () => {
+        const keyword = searchInput.value.trim();
+        if (keyword) {
+            currentFilterType = 'search';
+            currentFilterValue = encodeURIComponent(keyword);
+            currentPage = 1;
+            fetchVideos(currentPage);
+        }
+    });
+    searchInput.addEventListener('keyup', e => { if (e.key === 'Enter') searchBtn.click(); });
     
-    hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-    });
-
-    modalBody.addEventListener('click', e => {
-        const tag = e.target.closest('.searchable');
-        if (tag) {
-            e.preventDefault();
-            performSearch(tag.dataset.value);
-            closeModal();
+    // Paginasi
+    nextPageBtn.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+            fetchVideos(currentPage + 1);
         }
     });
 
-    closeModalBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-    desktopSearchInput.addEventListener('input', handleSearchInput);
-    mobileSearchInput.addEventListener('input', handleSearchInput);
-    filterButtons.forEach(btn => btn.addEventListener('click', e => {
-        filterButtons.forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        loadVideos(e.target.dataset.file);
-    }));
+    prevPageBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+            fetchVideos(currentPage - 1);
+        }
+    });
 
-    // Initial Load
-    loadVideos('censored.json');
+    // --- 6. Initial Load ---
+    fetchVideos();
 });
