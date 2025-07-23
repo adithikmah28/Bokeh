@@ -26,22 +26,31 @@
         <nav class="navbar">
             <a href="index.html" class="nav-logo">MiyabiFlix</a>
             
-            <!-- ELEMEN YANG HILANG ATAU SALAH ADA DI SINI -->
-            <div class="search-container">
-                <!-- Pastikan input ini ada dan memiliki id="searchInput" -->
-                <input type="text" id="searchInput" class="search-input" placeholder="Search title, actor, or ID...">
-                <button class="action-btn" id="searchBtn"><i class="fas fa-search"></i></button>
-            </div>
-            <!-- SELESAI -->
-            
+            <!-- Menu utama, sekarang berisi search bar di dalamnya -->
             <ul class="nav-menu">
+                <li class="nav-item mobile-search-container">
+                    <!-- Search bar khusus untuk mobile -->
+                    <div class="search-container">
+                        <input type="text" id="mobileSearchInput" class="search-input" placeholder="Search...">
+                        <button class="action-btn"><i class="fas fa-search"></i></button>
+                    </div>
+                </li>
                 <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
                 <li class="nav-item"><a href="#" class="nav-link">Categories</a></li>
                 <li class="nav-item"><a href="#" class="nav-link">Actresses</a></li>
             </ul>
+
+            <!-- Search bar khusus untuk desktop (terpisah) -->
+            <div class="search-container desktop-search-container">
+                <input type="text" id="desktopSearchInput" class="search-input" placeholder="Search title, actor, or ID...">
+                <button class="action-btn"><i class="fas fa-search"></i></button>
+            </div>
+            
             <div class="nav-actions">
                 <button class="btn btn-primary" id="loginBtn">Login</button>
             </div>
+
+            <!-- Hamburger menu tetap di sini -->
             <div class="hamburger">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -50,6 +59,7 @@
         </nav>
     </div>
 </header>
+
 
     <main>
         <section class="videos-section">
