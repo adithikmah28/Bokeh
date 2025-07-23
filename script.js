@@ -2,11 +2,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- DOM Elements ---
     const videoGrid = document.getElementById('videoGrid');
     const filterButtons = document.querySelectorAll('.filter-btn');
+    const searchInput = document.getElementById('searchInput');
     const modal = document.getElementById('modal');
     const modalBody = document.getElementById('modalBody');
     const closeModalBtn = document.getElementById('closeModalBtn');
     
-    let currentVideos = [];
+    let currentVideos = []; // Cache untuk data dari JSON yang aktif
 
     // --- FUNCTIONS ---
 
@@ -43,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p>${video.title}</p>
                 </div>`;
             
-            // Pasang listener langsung di setiap kartu
             videoCard.addEventListener('click', () => {
                 openDetailModal(video);
             });
@@ -51,30 +51,41 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // === INI FUNGSI BARU YANG DIBUAT ULANG ===
+    // === FUNGSI MODAL DI-UPGRADE TOTAL ===
     function openDetailModal(video) {
+        // Fungsi helper untuk membuat tag yang bisa diklik
+        const createSearchableTag = (type, value) => {
+            return `<a href="#" class="tag-item searchable" data-type="${type}" data-value="${value}">${value}</a>`;
+        };
+
         const videoDetailContent = `
             <h2 class="modal-main-title">${video.title}</h2>
+            
+            <!-- Poster di dalam Modal -->
+            <div class="modal-poster">
+                <img src="${video.poster}" alt="${video.title} Poster">
+            </div>
+
             <a href="player.html?id=${video.id}" target="_blank" class="btn btn-watch-online">Watch Online</a>
             
             <div class="modal-info-section">
                 <span class="info-label">ID Code:</span>
                 <div class="tag-group">
-                    <span class="tag-item">${video.id}</span>
+                    ${createSearchableTag('id', video.id)}
                 </div>
             </div>
 
             <div class="modal-info-section">
                 <span class="info-label">Categories:</span>
                 <div class="tag-group">
-                    ${video.categories.map(cat => `<span class="tag-item">${cat}</span>`).join('')}
+                    ${video.categories.map(cat => createSearchableTag('category', cat)).join('')}
                 </div>
             </div>
 
             <div class="modal-info-section">
                 <span class="info-label">Actor:</span>
                 <div class="tag-group">
-                    ${video.actors.map(actor => `<span class="tag-item">${actor}</span>`).join('')}
+                    ${video.actors.map(actor => createSearchableTag('actor', actor)).join('')}
                 </div>
             </div>
 
@@ -88,7 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
         
-        // Tambahkan class khusus ke modal content untuk styling
         modal.querySelector('.modal-content').classList.add('detail-modal-content');
         modalBody.innerHTML = videoDetailContent;
         modal.classList.add('active');
@@ -96,11 +106,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function closeModal() {
         modal.classList.remove('active');
-        // Hapus class khusus saat modal ditutup
         modal.querySelector('.modal-content').classList.remove('detail-modal-content');
     }
 
+    // === FUNGSI PENCARIAN BARU ===
+    function performSearch(type, value) {
+        let searchResult = [];
+        // Kita cari dari 'currentVideos' yang sedang aktif
+        switch (type) {
+            case 'id':
+                searchResult = currentVideos.filter(video => video.id === value);
+                break;
+            case 'category':
+                searchResult = currentVideos.filter(video => video.categories.includes(value));
+                break;
+            case 'actor':
+                searchResult = currentVideos.filter(video => video.actors.includes(value));
+                break;
+        }
+        
+        // Tampilkan hasil pencarian di grid utama
+        displayVideos(searchResult);
+        // Tampilkan juga di kolom search untuk konsistensi
+        searchInput.value = value;
+    }
+
     // --- EVENT LISTENERS ---
+
+    // Listener untuk filter kategori utama (Censored/Uncensored)
     filterButtons.forEach(button => {
         button.addEventListener('click', () => {
             const jsonFile = button.dataset.file;
@@ -108,6 +141,30 @@ document.addEventListener('DOMContentLoaded', () => {
             button.classList.add('active');
             loadVideos(jsonFile);
         });
+    });
+
+    // Listener untuk search manual
+    searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const searchedVideos = currentVideos.filter(video => 
+            video.title.toLowerCase().includes(searchTerm) || 
+            video.actors.some(actor => actor.toLowerCase().includes(searchTerm)) ||
+            video.id.toLowerCase().includes(searchTerm)
+        );
+        displayVideos(searchedVideos);
+    });
+    
+    // === LISTENER MODAL DI-UPGRADE ===
+    // Sekarang bisa menangani klik pada tag yang bisa dicari
+    modalBody.addEventListener('click', (e) => {
+        const searchableTag = e.target.closest('.searchable');
+        if (searchableTag) {
+            e.preventDefault(); // Mencegah link '#' berpindah halaman
+            const type = searchableTag.dataset.type;
+            const value = searchableTag.dataset.value;
+            performSearch(type, value);
+            closeModal();
+        }
     });
 
     closeModalBtn.addEventListener('click', closeModal);
