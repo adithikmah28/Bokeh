@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Now Playing... | MiyabiFlix</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- Link ke CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="player-page-body">
+
+    <div class="player-container">
+        <div class="player-header">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Gallery</a>
+            <h1 id="videoTitle">Loading...</h1>
+        </div>
+        
+        <div id="videoPlayerWrapper">
+            <!-- Video player will be dynamically inserted here -->
+        </div>
+
+        <div class="video-info">
+            <h2>Starring: <span id="videoActress">...</span></h2>
+        </div>
+    </div>
+    
+    <!-- Link ke Player JavaScript -->
+    <script src="player.js"></script>
+
+</body>
+</html>
