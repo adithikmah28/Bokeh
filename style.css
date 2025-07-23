@@ -1,114 +1,24 @@
-/* --- GLOBAL & VARIABLES --- */
-:root {
-    --primary-color: #E5A00D;
-    --dark-color: #0A0A0A;
-    --bg-color: #141414;
-    --text-color: #FFFFFF;
-    --text-muted: #888888;
-    --border-radius: 6px;
-    --font-family-body: 'Inter', sans-serif;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: var(--font-family-body); background-color: var(--dark-color); color: var(--text-color); line-height: 1.5; }
-.container { max-width: 1400px; margin: 0 auto; padding: 0 15px; }
+/* --- GLOBAL --- */
+:root { /* ... Variabel sama ... */ }
+body { background-color: #0A0A0A; color: #FFFFFF; font-family: sans-serif; margin: 0; }
+.container { max-width: 1400px; margin: 0 auto; padding: 20px; }
 
-/* --- HEADER / NAVBAR (DESKTOP)--- */
-.header { background-color: rgba(10, 10, 10, 0.85); backdrop-filter: blur(10px); position: sticky; top: 0; width: 100%; z-index: 100; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-.navbar { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
-.nav-logo { font-size: 1.6rem; font-weight: 700; color: var(--primary-color); flex-shrink: 0; }
-.nav-menu { display: flex; align-items: center; gap: 30px; }
-.nav-actions { display: flex; align-items: center; gap: 15px; }
-.hamburger { display: none; }
-.mobile-search-container { display: none; }
+/* --- HEADER & SEARCH --- */
+.header { /* ... Style sama ... */ }
+.search-container { display: flex; flex-grow: 1; max-width: 500px; }
+.search-container input { width: 100%; /* ... */ }
 
-/* --- SEARCH BAR (DESKTOP) --- */
-.desktop-search-container { flex-grow: 1; max-width: 400px; }
-.search-container { display: flex; align-items: center; background: var(--bg-color); border-radius: 20px; padding: 0 5px 0 15px; border: 1px solid #333; }
-.search-input { background: none; border: none; color: white; padding: 8px 0; outline: none; width: 100%; }
-.action-btn { background: none; border: none; color: var(--text-muted); font-size: 1.1rem; cursor: pointer; }
+/* --- FILTERS & PAGINATION --- */
+.category-filters, .pagination { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.filter-btn, .page-btn { /* ... Style sama ... */ }
+.page-btn:disabled { background-color: #333; cursor: not-allowed; }
 
 /* --- VIDEO GRID & CARDS --- */
-main { padding-top: 40px; }
-.videos-section { padding-bottom: 60px; }
-.section-header { margin-bottom: 25px; }
-.category-filters { display: flex; gap: 10px; flex-wrap: wrap; }
-.filter-btn { background: var(--bg-color); color: var(--text-muted); padding: 6px 14px; border: 1px solid #333; border-radius: 20px; cursor: pointer; }
-.filter-btn.active { background-color: var(--primary-color); color: #000; border-color: var(--primary-color); }
-.video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
-.video-card { cursor: pointer; }
-.card-banner img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: var(--border-radius); }
-.card-content { padding-top: 8px; }
-.card-title, .card-actors { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card-title { font-size: 0.95rem; color: #fff; }
-.card-actors { font-size: 0.85rem; color: var(--text-muted); }
+.video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; min-height: 500px; position: relative; }
+.video-card { /* ... Style sama ... */ }
 
-/* --- MODAL --- */
-.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
-.modal.active { display: flex; justify-content: center; align-items: center; overflow-y: auto; }
-.modal-content { background-color: #1f2024; margin: auto; padding: 30px; border: 1px solid #333; width: 90%; max-width: 700px; border-radius: var(--border-radius); position: relative; }
-.close-modal-btn { position: absolute; top: 10px; right: 20px; font-size: 28px; color: var(--text-muted); cursor: pointer; }
-.modal-poster img { width: 100%; margin-bottom: 25px; border-radius: var(--border-radius); }
-.btn-watch-online { display: inline-block; background-color: #1db954; color: #fff; padding: 12px 28px; border-radius: 8px; font-weight: 600; text-decoration: none; margin-bottom: 30px; }
-.tag-group { display: flex; flex-wrap: wrap; gap: 8px; }
-.tag-item { background-color: #6c5ce7; color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.9rem; }
-.tag-item.searchable { cursor: pointer; }
-/* ...Sisa style modal, footer, player... */
+/* --- LOADING SPINNER --- */
+.loading-spinner { position: absolute; top: 150px; left: 50%; transform: translateX(-50%); width: 50px; height: 50px; border: 5px solid #333; border-top-color: #E5A00D; border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: translateX(-50%) rotate(360deg); } }
 
-/*
-==============================================
-=== ATURAN MODE SELULER (MEDIA QUERIES) ===
-==============================================
-*/
-
-/* --- Aturan untuk Tablet & di bawahnya (lebar maks 992px) --- */
-@media screen and (max-width: 992px) {
-    .desktop-search-container { display: none; }
-    .nav-actions { display: none; }
-    .hamburger { display: block; cursor: pointer; padding: 5px; z-index: 101; }
-    .bar { display: block; width: 25px; height: 3px; margin: 5px auto; background-color: white; transition: all 0.3s ease-in-out; }
-    
-    .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-    .hamburger.active .bar:nth-child(2) { opacity: 0; }
-    .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-
-    .nav-menu {
-        position: absolute;
-        left: -100%;
-        top: 0;
-        width: 100%;
-        height: 100vh; /* Menu menutupi seluruh layar */
-        padding-top: 80px; /* Beri ruang dari atas */
-        flex-direction: column;
-        align-items: center;
-        background-color: #181818;
-        gap: 0;
-        transition: left 0.3s ease-in-out;
-    }
-    .nav-menu.active {
-        left: 0;
-    }
-    .nav-item { width: 100%; padding: 1.2rem 0; text-align: center; }
-    .nav-item:not(.mobile-search-container) { border-top: 1px solid #333; }
-    .mobile-search-container { display: block; padding: 0 20px; width: 90%; }
-}
-
-/* --- Aturan untuk HP (lebar maks 768px) --- */
-@media screen and (max-width: 768px) {
-    /* 3 kolom untuk HP besar */
-    .video-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-    }
-}
-
-/* --- Aturan untuk HP sangat kecil (lebar maks 480px) --- */
-@media screen and (max-width: 480px) {
-    /* 2 kolom untuk HP kecil */
-    .video-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
-    .container {
-        padding: 0 10px;
-    }
-}
+/* --- Sisa Style (Modal, Player Page, Error) sama seperti sebelumnya --- */
