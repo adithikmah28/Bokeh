@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- Ganti seluruh <head> di index.html dengan ini -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,52 +13,45 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
-    <!-- INI BAGIAN PALING PENTING -->
-    <!-- Pastikan path ini benar. Jika style.css sejajar dengan index.html, ini sudah benar. -->
+    <!-- Link ke Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- index.html -->
 
-<header class="header">
-    <div class="container">
-        <nav class="navbar">
-            <a href="index.html" class="nav-logo">MiyabiFlix</a>
-            
-            <!-- Menu utama, sekarang berisi search bar di dalamnya -->
-            <ul class="nav-menu">
-                <li class="nav-item mobile-search-container">
-                    <!-- Search bar khusus untuk mobile -->
-                    <div class="search-container">
-                        <input type="text" id="mobileSearchInput" class="search-input" placeholder="Search...">
-                        <button class="action-btn"><i class="fas fa-search"></i></button>
-                    </div>
-                </li>
-                <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Categories</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Actresses</a></li>
-            </ul>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="nav-logo">MiyabiFlix</a>
+                
+                <ul class="nav-menu">
+                    <li class="nav-item mobile-search-container">
+                        <div class="search-container">
+                            <input type="text" id="mobileSearchInput" class="search-input" placeholder="Search...">
+                            <button class="action-btn"><i class="fas fa-search"></i></button>
+                        </div>
+                    </li>
+                    <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Categories</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Actresses</a></li>
+                </ul>
 
-            <!-- Search bar khusus untuk desktop (terpisah) -->
-            <div class="search-container desktop-search-container">
-                <input type="text" id="desktopSearchInput" class="search-input" placeholder="Search title, actor, or ID...">
-                <button class="action-btn"><i class="fas fa-search"></i></button>
-            </div>
-            
-            <div class="nav-actions">
-                <button class="btn btn-primary" id="loginBtn">Login</button>
-            </div>
+                <div class="search-container desktop-search-container">
+                    <input type="text" id="desktopSearchInput" class="search-input" placeholder="Search title, actor, or ID...">
+                    <button class="action-btn"><i class="fas fa-search"></i></button>
+                </div>
+                
+                <div class="nav-actions">
+                    <button class="btn btn-primary" id="loginBtn">Login</button>
+                </div>
 
-            <!-- Hamburger menu tetap di sini -->
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-        </nav>
-    </div>
-</header>
-
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </nav>
+        </div>
+    </header>
 
     <main>
         <section class="videos-section">
@@ -72,15 +64,24 @@
                     </div>
                 </div>
                 <div id="videoGrid" class="video-grid">
-                    <!-- Video cards will be loaded here -->
+                    <!-- Video cards will be loaded here by JavaScript -->
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="footer"><!-- ... footer ... --></footer>
+    <footer class="footer">
+        <div class="container">
+            <div class="age-notice">
+                <p><i class="fas fa-exclamation-triangle"></i> This website contains mature content intended for adults 18+ only. By continuing, you confirm you are of legal age.</p>
+            </div>
+            <div class="footer-copyright">
+                © 2023 MiyabiFlix. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
 
-    <!-- MODAL (Kembali menjadi modal detail, bukan video) -->
+    <!-- MODAL (Wadah ini harus ada di root body) -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <button id="closeModalBtn" class="close-modal-btn">×</button>
@@ -91,5 +92,6 @@
     </div>
     
     <script src="script.js"></script>
+
 </body>
 </html>
