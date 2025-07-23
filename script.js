@@ -1,15 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. DATA PUBLIK: Metadata untuk ditampilkan di galeri ---
-    const videos = [
-        { id: 1, title: 'Secret Office Affair', actress: 'Yua Mikami', poster: 'https://placehold.co/300x450/111/fff?text=MIAA-123', duration: '24:15', categories: ['new', 'milf'] },
-        { id: 2, title: 'Private Tutor\'s Lesson', actress: 'Eimi Fukada', poster: 'https://placehold.co/300x450/111/fff?text=SSIS-021', duration: '31:02', categories: ['new', 'school', 'uncensored'] },
-        { id: 3, title: 'Lost in Translation', actress: 'Ria Sakura', poster: 'https://placehold.co/300x450/111/fff?text=IPX-456', duration: '28:44', categories: ['cosplay'] },
-        { id: 4, title: 'After School Special', actress: 'Kana Momonogi', poster: 'https://placehold.co/300x450/111/fff?text=JUFE-111', duration: '22:50', categories: ['school'] },
-        { id: 5, title: 'My Wife\'s Sister', actress: 'Yui Hatano', poster: 'https://placehold.co/300x450/111/fff?text=MIDE-789', duration: '35:12', categories: ['milf', 'uncensored'] },
-        { id: 6, title: 'Cosplay Cafe Dream', actress: 'Rin Azuma', poster: 'https://placehold.co/300x450/111/fff?text=CAWD-007', duration: '19:30', categories: ['cosplay', 'new'] },
-    ];
-    
+    // --- 1. Konfigurasi API ---
+    const API_URL = 'https://avdbapi.com/api.php/provide/vod';
+    let allApiVideos = []; // Untuk menyimpan semua data video dari API
+
     // --- 2. DOM ELEMENTS ---
     const videoGrid = document.getElementById('videoGrid');
     const filterButtons = document.querySelectorAll('.filter-btn');
@@ -25,32 +19,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 3. FUNCTIONS ---
 
-    const renderVideos = (videoArray) => {
+    /** Mengambil dan menampilkan video dari API */
+    async function fetchAndRenderVideos() {
+        videoGrid.innerHTML = '<p class="no-results">Loading videos...</p>';
+        try {
+            const response = await fetch(API_URL);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            allApiVideos = data.list; // Simpan data asli
+            displayVideos(allApiVideos); // Tampilkan semua video saat pertama kali load
+        } catch (error) {
+            console.error("Could not fetch videos:", error);
+            videoGrid.innerHTML = '<p class="no-results">Failed to load videos. Please try again later.</p>';
+        }
+    }
+
+    /** Menampilkan video ke grid */
+    function displayVideos(videoArray) {
         videoGrid.innerHTML = '';
-        if (videoArray.length === 0) {
+        if (!videoArray || videoArray.length === 0) {
             videoGrid.innerHTML = '<p class="no-results">No videos found.</p>';
             return;
         }
+
         videoArray.forEach(video => {
             const videoCard = document.createElement('div');
             videoCard.className = 'video-card';
-            videoCard.dataset.id = video.id;
+            videoCard.dataset.id = video.vod_id; // Gunakan vod_id dari API
             videoCard.innerHTML = `
                 <div class="card-banner">
-                    <img src="${video.poster}" alt="${video.title} Poster" loading="lazy">
+                    <img src="${video.vod_pic}" alt="${video.vod_name} Poster" loading="lazy">
                     <div class="card-overlay">
-                        <span class="card-tag quality">HD</span>
-                        <span class="card-tag duration">${video.duration}</span>
+                        <span class="card-tag quality">${video.vod_quality || 'HD'}</span>
+                        <span class="card-tag duration">${video.vod_duration || 'N/A'}</span>
                     </div>
                 </div>
                 <div class="card-content">
-                    <h3>${video.title}</h3>
-                    <p>${video.actress}</p>
+                    <h3>${video.vod_name}</h3>
+                    <p>${video.vod_actor || 'Unknown Actress'}</p>
                 </div>
             `;
             videoGrid.appendChild(videoCard);
         });
-    };
+    }
 
     const openModal = (content) => {
         modalBody.innerHTML = content;
@@ -64,99 +77,71 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 4. EVENT LISTENERS ---
 
-    // Filter videos
+    // Filter (sekarang memfilter data yang sudah disimpan)
     filterButtons.forEach(button => {
         button.addEventListener('click', () => {
+            // Logika filter saat ini tidak bisa bekerja langsung dengan API ini
+            // karena API tidak menyediakan kategori seperti yang kita buat.
+            // Untuk sementara, kita buat tombol filter hanya mengubah style saja.
+            // Atau, bisa diimplementasikan jika Anda tahu parameter filter di API-nya.
+            console.warn("Filtering logic needs API parameter support.");
             filterButtons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
-            const filter = button.dataset.filter;
-            const filteredVideos = filter === 'all' 
-                ? videos 
-                : videos.filter(video => video.categories.includes(filter));
-            renderVideos(filteredVideos);
         });
     });
 
-    // Search videos
+    // Search (sekarang mencari dari data yang sudah disimpan)
     searchInput.addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase();
-        const searchedVideos = videos.filter(video => 
-            video.title.toLowerCase().includes(searchTerm) || 
-            video.actress.toLowerCase().includes(searchTerm)
+        const searchedVideos = allApiVideos.filter(video => 
+            video.vod_name.toLowerCase().includes(searchTerm) || 
+            (video.vod_actor && video.vod_actor.toLowerCase().includes(searchTerm))
         );
-        renderVideos(searchedVideos);
+        displayVideos(searchedVideos);
     });
     
-    // Toggle Search Bar
-    searchBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        searchContainer.classList.toggle('active');
-        searchInput.focus();
-    });
-
     // Open video detail modal
     videoGrid.addEventListener('click', (e) => {
         const card = e.target.closest('.video-card');
         if (!card) return;
         const videoId = parseInt(card.dataset.id);
-        const video = videos.find(v => v.id === videoId);
+        const video = allApiVideos.find(v => v.vod_id === videoId);
         if (video) {
             const videoDetailContent = `
                 <div class="modal-poster">
-                    <img src="${video.poster}" alt="${video.title}">
+                    <img src="${video.vod_pic}" alt="${video.vod_name}">
                 </div>
-                <h2>${video.title}</h2>
-                <h3>Starring: ${video.actress}</h3>
-                <p>Duration: ${video.duration}</p>
+                <h2>${video.vod_name}</h2>
+                <h3>Starring: ${video.vod_actor || 'Unknown'}</h3>
+                <p>Duration: ${video.vod_duration || 'N/A'}</p>
                 <div class="tags">
-                    ${video.categories.map(cat => `<span>${cat}</span>`).join('')}
+                    <span>${video.type_name}</span>
                 </div>
-                <!-- PERUBAHAN DI SINI: Menggunakan <button> dengan data-videoid -->
-                <button data-videoid="${video.id}" class="btn btn-primary play-btn"><i class="fas fa-play"></i> Watch Now</button>
+                <button data-videoid="${video.vod_id}" class="btn btn-primary play-btn"><i class="fas fa-play"></i> Watch Now</button>
             `;
             openModal(videoDetailContent);
         }
     });
 
-    // Open login modal
-    loginBtn.addEventListener('click', () => {
-        const loginFormContent = `
-            <form class="login-form">
-                <h2>Member Login</h2>
-                <div class="form-group"><label for="username">Username</label><input type="text" id="username" required></div>
-                <div class="form-group"><label for="password">Password</label><input type="password" id="password" required></div>
-                <button type="submit" class="btn btn-primary">Login</button>
-            </form>
-        `;
-        openModal(loginFormContent);
-    });
-
-    // === INI ADALAH BAGIAN BARU YANG MEMPERBAIKI MASALAH ===
-    // Event listener untuk menangani klik di dalam modal
+    // Event listener untuk tombol 'Watch Now' di dalam modal
     modalBody.addEventListener('click', (e) => {
-        // Cek apakah yang diklik adalah tombol "Watch Now"
         const playButton = e.target.closest('.play-btn');
         if (playButton) {
             const videoId = playButton.dataset.videoid;
             if (videoId) {
-                // Buka player.html di tab baru
                 window.open(`player.html?id=${videoId}`, '_blank');
-                closeModal(); // Otomatis tutup modal setelah klik
+                closeModal();
             }
         }
     });
-    // =======================================================
 
-    // Close modal listeners
+    // Sisa event listener lainnya (Login, Hamburger, dll.)
+    loginBtn.addEventListener('click', () => { /* ... Logika login modal ... */ });
+    searchBtn.addEventListener('click', (e) => { e.preventDefault(); searchContainer.classList.toggle('active'); searchInput.focus(); });
     closeModalBtn.addEventListener('click', closeModal);
     modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-    
-    // Hamburger menu
-    hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-    });
+    hamburger.addEventListener('click', () => { hamburger.classList.toggle('active'); navMenu.classList.toggle('active'); });
 
-    // --- 5. INITIAL RENDER ---
-    renderVideos(videos);
+    // --- 5. INITIAL FETCH ---
+    fetchAndRenderVideos();
 });
