@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 6, title: 'Cosplay Cafe Dream', actress: 'Rin Azuma', poster: 'https://placehold.co/300x450/111/fff?text=CAWD-007', duration: '19:30', categories: ['cosplay', 'new'] },
     ];
     
-    // Semua DOM Elements dan fungsi lain tetap sama
+    // --- 2. DOM ELEMENTS ---
     const videoGrid = document.getElementById('videoGrid');
     const filterButtons = document.querySelectorAll('.filter-btn');
     const searchInput = document.getElementById('searchInput');
@@ -22,6 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginBtn = document.getElementById('loginBtn');
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
+
+    // --- 3. FUNCTIONS ---
 
     const renderVideos = (videoArray) => {
         videoGrid.innerHTML = '';
@@ -60,8 +62,9 @@ document.addEventListener('DOMContentLoaded', () => {
         modalBody.innerHTML = '';
     };
 
-    // --- EVENT LISTENERS ---
+    // --- 4. EVENT LISTENERS ---
 
+    // Filter videos
     filterButtons.forEach(button => {
         button.addEventListener('click', () => {
             filterButtons.forEach(btn => btn.classList.remove('active'));
@@ -74,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Search videos
     searchInput.addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase();
         const searchedVideos = videos.filter(video => 
@@ -82,13 +86,15 @@ document.addEventListener('DOMContentLoaded', () => {
         );
         renderVideos(searchedVideos);
     });
-
+    
+    // Toggle Search Bar
     searchBtn.addEventListener('click', (e) => {
         e.preventDefault();
         searchContainer.classList.toggle('active');
         searchInput.focus();
     });
 
+    // Open video detail modal
     videoGrid.addEventListener('click', (e) => {
         const card = e.target.closest('.video-card');
         if (!card) return;
@@ -105,13 +111,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="tags">
                     ${video.categories.map(cat => `<span>${cat}</span>`).join('')}
                 </div>
-                <!-- INI PERUBAHAN UTAMA: Link ke player.html dengan ID -->
-                <a href="player.html?id=${video.id}" target="_blank" class="btn btn-primary play-btn"><i class="fas fa-play"></i> Watch Now</a>
+                <!-- PERUBAHAN DI SINI: Menggunakan <button> dengan data-videoid -->
+                <button data-videoid="${video.id}" class="btn btn-primary play-btn"><i class="fas fa-play"></i> Watch Now</button>
             `;
             openModal(videoDetailContent);
         }
     });
 
+    // Open login modal
     loginBtn.addEventListener('click', () => {
         const loginFormContent = `
             <form class="login-form">
@@ -124,12 +131,32 @@ document.addEventListener('DOMContentLoaded', () => {
         openModal(loginFormContent);
     });
 
+    // === INI ADALAH BAGIAN BARU YANG MEMPERBAIKI MASALAH ===
+    // Event listener untuk menangani klik di dalam modal
+    modalBody.addEventListener('click', (e) => {
+        // Cek apakah yang diklik adalah tombol "Watch Now"
+        const playButton = e.target.closest('.play-btn');
+        if (playButton) {
+            const videoId = playButton.dataset.videoid;
+            if (videoId) {
+                // Buka player.html di tab baru
+                window.open(`player.html?id=${videoId}`, '_blank');
+                closeModal(); // Otomatis tutup modal setelah klik
+            }
+        }
+    });
+    // =======================================================
+
+    // Close modal listeners
     closeModalBtn.addEventListener('click', closeModal);
     modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    
+    // Hamburger menu
     hamburger.addEventListener('click', () => {
         hamburger.classList.toggle('active');
         navMenu.classList.toggle('active');
     });
 
+    // --- 5. INITIAL RENDER ---
     renderVideos(videos);
 });
