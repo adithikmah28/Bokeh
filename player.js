@@ -1,20 +1,16 @@
 document.addEventListener('DOMContentLoaded', async () => {
 
-    // --- DOM Elements ---
+    // ... DOM Elements sama ...
     const playerContainer = document.querySelector('.player-container');
     const videoTitle = document.getElementById('videoTitle');
     const videoActress = document.getElementById('videoActress');
     const iframePlayer = document.getElementById('videoPlayerIframe');
 
-    // --- Data Files ---
-    const dataFiles = ['censored.json', 'uncensored.json'];
+    // PERUBAHAN DI SINI: Tambahkan path 'data/' ke nama file
+    const dataFiles = ['data/censored.json', 'data/uncensored.json'];
 
-    // === INI FUNGSI ERROR YANG SUDAH DISEMPURNAKAN ===
-    /**
-     * Menampilkan pesan error dengan mengganti seluruh isi container.
-     * Metode ini anti-gagal karena tidak bergantung pada elemen lain.
-     */
     function displayError(message) {
+        // ... fungsi displayError sama persis, tidak perlu diubah ...
         if (playerContainer) {
             playerContainer.innerHTML = `
                 <div class="player-header">
@@ -25,13 +21,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <p>${message}</p>
                 </div>
             `;
-        } else {
-            // Fallback jika container utama pun tidak ditemukan
-            document.body.innerHTML = `<div style="color:white; text-align:center; padding-top: 50px;"><h1>Fatal Error</h1><p>${message}</p><a href="index.html">Go Back</a></div>`;
         }
     }
 
     async function findVideoById(id) {
+        // Tidak ada perubahan di sini, karena 'dataFiles' sudah berisi path yang benar
         for (const file of dataFiles) {
             try {
                 const response = await fetch(file);
@@ -47,24 +41,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         return null;
     }
 
-    // --- Main Logic ---
+    // ... Main Logic sama persis, tidak perlu diubah ...
     try {
         const urlParams = new URLSearchParams(window.location.search);
-        const videoId = parseInt(urlParams.get('id'));
+        const videoId = urlParams.get('id'); 
 
-        if (!videoId || isNaN(videoId)) {
-            // Jika ID tidak ada atau bukan angka, langsung tampilkan error.
-            throw new Error("A valid Video ID was not provided in the URL.");
+        if (!videoId) {
+            throw new Error("Video ID was not provided in the URL.");
         }
 
         const video = await findVideoById(videoId);
 
         if (!video) {
-            // Jika video tidak ditemukan setelah mencari di semua file.
             throw new Error(`Video with ID "${videoId}" could not be found.`);
         }
 
-        // Jika semua berhasil, lanjutkan seperti biasa
         document.title = `${video.title} | MiyabiFlix`;
         videoTitle.textContent = video.title;
         videoActress.textContent = video.actress;
@@ -72,6 +63,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     } catch (error) {
         console.error("Player Initialization Error:", error);
-        displayError(error.message); // Panggil fungsi error yang sudah bulletproof
+        displayError(error.message);
     }
 });
