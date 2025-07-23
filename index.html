@@ -4,82 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MiyabiFlix - Exclusive JAV Collection</title>
-    
-    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
-    <!-- Link to CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <!-- HEADER / NAVIGATION -->
-    <header class="header">
-        <div class="container">
-            <nav class="navbar">
-                <a href="#" class="nav-logo">MiyabiFlix</a>
-                <div class="search-container">
-                    <input type="text" id="searchInput" class="search-input" placeholder="Search title or actress...">
-                    <button class="action-btn" id="searchBtn"><i class="fas fa-search"></i></button>
-                </div>
-                <ul class="nav-menu">
-                    <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Categories</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Actresses</a></li>
-                </ul>
-                <div class="nav-actions">
-                    <button class="btn btn-primary" id="loginBtn">Login</button>
-                </div>
-                <div class="hamburger">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </div>
-            </nav>
-        </div>
-    </header>
+    <header class="header"><!-- ... navigasi ... --></header>
 
     <main>
-        <!-- VIDEO GALLERY SECTION -->
         <section class="videos-section">
             <div class="container">
                 <div class="section-header">
                     <h2>Latest Collection</h2>
                     <div class="category-filters">
-                        <button class="filter-btn active" data-filter="all">All</button>
-                        <button class="filter-btn" data-filter="new">New</button>
-                        <button class="filter-btn" data-filter="uncensored">Uncensored</button>
-                        <button class="filter-btn" data-filter="cosplay">Cosplay</button>
-                        <button class="filter-btn" data-filter="milf">MILF</button>
-                        <button class="filter-btn" data-filter="school">School</button>
+                        <button class="filter-btn active" data-file="censored.json">Censored</button>
+                        <button class="filter-btn" data-file="uncensored.json">Uncensored</button>
                     </div>
                 </div>
-
                 <div id="videoGrid" class="video-grid">
-                    <!-- Videos will be dynamically inserted here by JavaScript -->
+                    <!-- Video cards will be loaded here -->
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="footer">
-        <div class="container">
-            <div class="age-notice">
-                <p><i class="fas fa-exclamation-triangle"></i> This website contains mature content intended for adults 18+ only. By continuing, you confirm you are of legal age.</p>
-            </div>
-            <div class="footer-copyright">
-                © 2023 MiyabiFlix. All Rights Reserved.
-            </div>
-        </div>
-    </footer>
+    <footer class="footer"><!-- ... footer ... --></footer>
 
-    <!-- MODAL (Initially Hidden) -->
+    <!-- MODAL (Kembali menjadi modal detail, bukan video) -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <button id="closeModalBtn" class="close-modal-btn">×</button>
@@ -89,7 +42,6 @@
         </div>
     </div>
     
-    <!-- Link to JavaScript (Now contains all the logic) -->
     <script src="script.js"></script>
 </body>
 </html>
