@@ -1,24 +1,350 @@
-/* --- GLOBAL --- */
-:root { /* ... Variabel sama ... */ }
-body { background-color: #0A0A0A; color: #FFFFFF; font-family: sans-serif; margin: 0; }
-.container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+/* --- GLOBAL & VARIABLES --- */
+:root {
+    --primary-color: #E5A00D; /* Warm Gold/Amber */
+    --dark-color: #0A0A0A;    /* Deep Black */
+    --bg-color: #141414;      /* Slightly lighter black for cards */
+    --text-color: #FFFFFF;
+    --text-muted: #888888;
+    --border-radius: 6px;
+    --font-family-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family-body);
+    background-color: var(--dark-color);
+    color: var(--text-color);
+    line-height: 1.5;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
 
 /* --- HEADER & SEARCH --- */
-.header { /* ... Style sama ... */ }
-.search-container { display: flex; flex-grow: 1; max-width: 500px; }
-.search-container input { width: 100%; /* ... */ }
+.header {
+    background-color: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    letter-spacing: 1px;
+    flex-shrink: 0;
+}
+
+.search-container {
+    display: flex;
+    flex-grow: 1;
+    max-width: 500px;
+    background: var(--bg-color);
+    border-radius: 20px;
+    border: 1px solid #333;
+    transition: all 0.3s ease;
+}
+
+.search-container:focus-within {
+    border-color: var(--primary-color);
+}
+
+.search-container input {
+    background: none;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    outline: none;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.search-container button {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0 15px;
+}
 
 /* --- FILTERS & PAGINATION --- */
-.category-filters, .pagination { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-.filter-btn, .page-btn { /* ... Style sama ... */ }
-.page-btn:disabled { background-color: #333; cursor: not-allowed; }
+.category-filters,
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.filter-btn,
+.page-btn {
+    background: var(--bg-color);
+    color: var(--text-muted);
+    padding: 8px 16px;
+    border: 1px solid #333;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.filter-btn:hover,
+.page-btn:hover:not(:disabled) {
+    background-color: #333;
+    color: #fff;
+}
+
+.filter-btn.active {
+    background-color: var(--primary-color);
+    color: #000;
+    border-color: var(--primary-color);
+    font-weight: 700;
+}
+
+.page-btn:disabled {
+    background-color: #222;
+    color: #555;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+#currentPageSpan {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    color: var(--text-muted);
+}
 
 /* --- VIDEO GRID & CARDS --- */
-.video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; min-height: 500px; position: relative; }
-.video-card { /* ... Style sama ... */ }
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+    min-height: 500px; /* Memberi ruang untuk loading spinner */
+    position: relative;
+}
+
+.video-card {
+    background-color: transparent;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.video-card:hover {
+    transform: scale(1.05);
+    z-index: 10;
+}
+
+.card-banner {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    background-color: #222; /* Placeholder color */
+}
+
+.card-banner img {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    display: block;
+}
+
+.card-content {
+    padding-top: 10px;
+}
+
+.card-title,
+.card-actors {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.card-actors {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
 
 /* --- LOADING SPINNER --- */
-.loading-spinner { position: absolute; top: 150px; left: 50%; transform: translateX(-50%); width: 50px; height: 50px; border: 5px solid #333; border-top-color: #E5A00D; border-radius: 50%; animation: spin 1s linear infinite; }
-@keyframes spin { to { transform: translateX(-50%) rotate(360deg); } }
+.loading-spinner {
+    position: absolute;
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    border: 5px solid #333;
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
 
-/* --- Sisa Style (Modal, Player Page, Error) sama seperti sebelumnya --- */
+@keyframes spin {
+    to { transform: translateX(-50%) rotate(360deg); }
+}
+
+.no-results {
+    grid-column: 1 / -1; /* Agar teks berada di tengah grid */
+    text-align: center;
+    color: var(--text-muted);
+    padding: 40px;
+    font-size: 1.2rem;
+}
+
+/* --- MODAL (Tidak digunakan lagi, tapi jaga-jaga) --- */
+.modal {
+    display: none;
+}
+
+/* --- PLAYER PAGE STYLES --- */
+.player-page-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #000;
+}
+
+.player-container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+}
+
+.player-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.player-header h1 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    text-align: right;
+}
+
+.back-btn {
+    color: var(--text-muted);
+    font-size: 1rem;
+    transition: color 0.3s;
+}
+
+.back-btn:hover {
+    color: var(--primary-color);
+}
+
+.video-player-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    background-color: #000;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.video-player-wrapper video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.video-info {
+    margin-top: 20px;
+}
+
+.video-info h2 {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.video-info h2 span {
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+.error-message-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: var(--bg-color);
+    border-radius: var(--border-radius);
+    padding: 40px;
+    margin-top: 20px;
+    border: 1px solid #444;
+    min-height: 300px;
+}
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 768px) {
+    .navbar {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .nav-logo {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    .search-container {
+        order: 3; /* Pindahkan search bar ke bawah logo */
+        width: 100%;
+        max-width: 100%;
+    }
+    .video-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .video-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .container {
+        padding: 10px;
+    }
+}
