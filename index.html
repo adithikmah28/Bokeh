@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiyabiFlix - Koleksi Eksklusif JAV</title>
+    <title>MiyabiFlix - Exclusive JAV Collection</title>
     
-    <!-- Google Fonts: Inter (Modern & Clean) -->
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,24 +13,27 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
-    <!-- Link ke CSS -->
+    <!-- Link to CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- HEADER / NAVIGASI -->
+    <!-- HEADER / NAVIGATION -->
     <header class="header">
         <div class="container">
             <nav class="navbar">
                 <a href="#" class="nav-logo">MiyabiFlix</a>
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search title or actress...">
+                    <button class="action-btn" id="searchBtn"><i class="fas fa-search"></i></button>
+                </div>
                 <ul class="nav-menu">
                     <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Kategori</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Aktris</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Categories</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Actresses</a></li>
                 </ul>
                 <div class="nav-actions">
-                    <button class="action-btn"><i class="fas fa-search"></i></button>
-                    <button class="btn btn-primary">Login</button>
+                    <button class="btn btn-primary" id="loginBtn">Login</button>
                 </div>
                 <div class="hamburger">
                     <span class="bar"></span>
@@ -46,54 +49,19 @@
         <section class="videos-section">
             <div class="container">
                 <div class="section-header">
-                    <h2>Koleksi Terbaru</h2>
+                    <h2>Latest Collection</h2>
                     <div class="category-filters">
-                        <button class="filter-btn active">New Release</button>
-                        <button class="filter-btn">Uncensored</button>
-                        <button class="filter-btn">Cosplay</button>
-                        <button class="filter-btn">MILF</button>
-                        <button class="filter-btn">School</button>
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="new">New</button>
+                        <button class="filter-btn" data-filter="uncensored">Uncensored</button>
+                        <button class="filter-btn" data-filter="cosplay">Cosplay</button>
+                        <button class="filter-btn" data-filter="milf">MILF</button>
+                        <button class="filter-btn" data-filter="school">School</button>
                     </div>
                 </div>
 
-                <div class="video-grid">
-                    <!-- Ganti placeholder dengan gambar yang sesuai tema -->
-                    <!-- Video Card 1 -->
-                    <div class="video-card">
-                        <div class="card-banner">
-                            <img src="https://placehold.co/300x450/111/fff?text=MIAA-123" alt="Video Poster">
-                            <div class="card-overlay">
-                                <span class="card-quality">HD</span>
-                                <span class="card-duration">24:15</span>
-                            </div>
-                        </div>
-                        <div class="card-content">
-                            <h3>Secret Office Affair</h3>
-                            <p>Yua Mikami</p>
-                        </div>
-                    </div>
-                    <!-- Video Card 2 -->
-                    <div class="video-card">
-                        <div class="card-banner">
-                            <img src="https://placehold.co/300x450/111/fff?text=SSIS-021" alt="Video Poster">
-                            <div class="card-overlay">
-                                <span class="card-quality">HD</span>
-                                <span class="card-duration">31:02</span>
-                            </div>
-                        </div>
-                        <div class="card-content">
-                            <h3>Private Tutor's Lesson</h3>
-                            <p>Eimi Fukada</p>
-                        </div>
-                    </div>
-                    <!-- Tambahkan 10-14 video card lagi di sini untuk mengisi grid -->
-                    <div class="video-card"><div class="card-banner"><img src="https://placehold.co/300x450/111/fff?text=IPX-456" alt="Video Poster"><div class="card-overlay"><span class="card-quality">HD</span><span class="card-duration">28:44</span></div></div><div class="card-content"><h3>Lost in Translation</h3><p>Ria Sakura</p></div></div>
-                    <div class="video-card"><div class="card-banner"><img src="https://placehold.co/300x450/111/fff?text=JUFE-111" alt="Video Poster"><div class="card-overlay"><span class="card-quality">HD</span><span class="card-duration">22:50</span></div></div><div class="card-content"><h3>After School Special</h3><p>Kana Momonogi</p></div></div>
-                    <div class="video-card"><div class="card-banner"><img src="https://placehold.co/300x450/111/fff?text=MIDE-789" alt="Video Poster"><div class="card-overlay"><span class="card-quality">HD</span><span class="card-duration">35:12</span></div></div><div class="card-content"><h3>My Wife's Sister</h3><p>Yui Hatano</p></div></div>
-                    <div class="video-card"><div class="card-banner"><img src="https://placehold.co/300x450/111/fff?text=CAWD-007" alt="Video Poster"><div class="card-overlay"><span class="card-quality">HD</span><span class="card-duration">19:30</span></div></div><div class="card-content"><h3>Cosplay Cafe Dream</h3><p>Rin Azuma</p></div></div>
-                    <div class="video-card"><div class="card-banner"><img src="https://placehold.co/300x450/111/fff?text=STARS-001" alt="Video Poster"><div class="card-overlay"><span class="card-quality">HD</span><span class="card-duration">26:18</span></div></div><div class="card-content"><h3>Idol's Secret</h3><p>Aika Yumeno</p></div></div>
-                    <div class="video-card"><div class="card-banner"><img src="https://placehold.co/300x450/111/fff?text=FSDSS-100" alt="Video Poster"><div class="card-overlay"><span class="card-quality">HD</span><span class="card-duration">29:55</span></div></div><div class="card-content"><h3>Neighborhood MILF</h3><p>Julia</p></div></div>
-                    
+                <div id="videoGrid" class="video-grid">
+                    <!-- Videos will be dynamically inserted here by JavaScript -->
                 </div>
             </div>
         </section>
@@ -103,7 +71,7 @@
     <footer class="footer">
         <div class="container">
             <div class="age-notice">
-                <p><i class="fas fa-exclamation-triangle"></i> Website ini berisi konten dewasa dan hanya untuk 18 tahun ke atas. Dengan melanjutkan, Anda mengonfirmasi bahwa Anda cukup umur.</p>
+                <p><i class="fas fa-exclamation-triangle"></i> This website contains mature content intended for adults 18+ only. By continuing, you confirm you are of legal age.</p>
             </div>
             <div class="footer-copyright">
                 © 2023 MiyabiFlix. All Rights Reserved.
@@ -111,7 +79,17 @@
         </div>
     </footer>
 
-    <!-- Link ke JavaScript kamu (tidak ada perubahan) -->
+    <!-- MODAL (Initially Hidden) -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <button id="closeModalBtn" class="close-modal-btn">×</button>
+            <div id="modalBody" class="modal-body">
+                <!-- Modal content will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Link to JavaScript (Now contains all the logic) -->
     <script src="script.js"></script>
 </body>
 </html>
