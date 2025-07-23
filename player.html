@@ -25,13 +25,17 @@
         </div>
         
         <div id="videoPlayerWrapper">
-            <!-- Video player will be dynamically inserted here -->
+            <!-- Video tag ini akan dikontrol oleh HLS.js -->
+            <video id="videoPlayer" controls autoplay playsinline></video>
         </div>
 
         <div class="video-info">
             <h2>Starring: <span id="videoActress">...</span></h2>
         </div>
     </div>
+    
+    <!-- Library HLS.js untuk memutar video .m3u8 -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
     <!-- Link ke Player JavaScript -->
     <script src="player.js"></script>
