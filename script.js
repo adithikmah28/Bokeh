@@ -1,16 +1,60 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- DOM Elements ---
+    // --- DOM ELEMENTS ---
     const videoGrid = document.getElementById('videoGrid');
     const filterButtons = document.querySelectorAll('.filter-btn');
-    const searchInput = document.getElementById('searchInput');
+    // PERUBAHAN: Kenali kedua search input
+    const desktopSearchInput = document.getElementById('desktopSearchInput');
+    const mobileSearchInput = document.getElementById('mobileSearchInput');
     const modal = document.getElementById('modal');
     const modalBody = document.getElementById('modalBody');
     const closeModalBtn = document.getElementById('closeModalBtn');
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
     
-    let currentVideos = []; // Cache untuk data dari JSON yang aktif
+    let currentVideos = [];
 
     // --- FUNCTIONS ---
+    async function loadVideos(jsonFilename) { /* ... fungsi ini tetap sama ... */ }
+    function displayVideos(videoArray) { /* ... fungsi ini tetap sama ... */ }
+    function openDetailModal(video) { /* ... fungsi ini tetap sama ... */ }
+    function closeModal() { /* ... fungsi ini tetap sama ... */ }
+    function performSearch(type, value) { /* ... fungsi ini tetap sama ... */ }
+    
+    // PERUBAHAN: Fungsi baru untuk menangani input pencarian
+    function handleSearchInput(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        
+        // Sinkronkan nilai input lainnya
+        if (e.target.id === 'desktopSearchInput') {
+            mobileSearchInput.value = e.target.value;
+        } else {
+            desktopSearchInput.value = e.target.value;
+        }
+        
+        const searchedVideos = currentVideos.filter(video => 
+            video.title.toLowerCase().includes(searchTerm) || 
+            video.actors.some(actor => actor.toLowerCase().includes(searchTerm)) ||
+            video.id.toLowerCase().includes(searchTerm)
+        );
+        displayVideos(searchedVideos);
+    }
+    
+    // --- EVENT LISTENERS ---
+    // ... Listener filter, modalBody, closeModalBtn tetap sama ...
+    
+    // PERUBAHAN: Pasang listener ke kedua input
+    desktopSearchInput.addEventListener('input', handleSearchInput);
+    mobileSearchInput.addEventListener('input', handleSearchInput);
 
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+
+    // --- INITIAL LOAD ---
+    loadVideos('censored.json');
+
+    // Salin-tempel fungsi-fungsi yang tidak berubah di sini
     async function loadVideos(jsonFilename) {
         const filePath = `data/${jsonFilename}`;
         videoGrid.innerHTML = '<p class="no-results">Loading videos...</p>';
@@ -25,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
             videoGrid.innerHTML = `<p class="no-results">Failed to load videos. Make sure you are using a Live Server.</p>`;
         }
     }
-
     function displayVideos(videoArray) {
         videoGrid.innerHTML = '';
         if (!videoArray || videoArray.length === 0) {
@@ -36,142 +79,44 @@ document.addEventListener('DOMContentLoaded', () => {
             const videoCard = document.createElement('div');
             videoCard.className = 'video-card';
             videoCard.innerHTML = `
-                <div class="card-banner">
-                    <img src="${video.poster}" alt="${video.title} Poster" loading="lazy">
-                </div>
-                <div class="card-content">
-                    <h3>${video.id.toUpperCase()}</h3>
-                    <p>${video.title}</p>
-                </div>`;
-            
-            videoCard.addEventListener('click', () => {
-                openDetailModal(video);
-            });
+                <div class="card-banner"><img src="${video.poster}" alt="${video.title} Poster" loading="lazy"></div>
+                <div class="card-content"><h3>${video.id.toUpperCase()}</h3><p>${video.title}</p></div>`;
+            videoCard.addEventListener('click', () => openDetailModal(video));
             videoGrid.appendChild(videoCard);
         });
     }
-
-    // === FUNGSI MODAL DI-UPGRADE TOTAL ===
     function openDetailModal(video) {
-        // Fungsi helper untuk membuat tag yang bisa diklik
-        const createSearchableTag = (type, value) => {
-            return `<a href="#" class="tag-item searchable" data-type="${type}" data-value="${value}">${value}</a>`;
-        };
-
-        const videoDetailContent = `
-            <h2 class="modal-main-title">${video.title}</h2>
-            
-            <!-- Poster di dalam Modal -->
-            <div class="modal-poster">
-                <img src="${video.poster}" alt="${video.title} Poster">
-            </div>
-
-            <a href="player.html?id=${video.id}" target="_blank" class="btn btn-watch-online">Watch Online</a>
-            
-            <div class="modal-info-section">
-                <span class="info-label">ID Code:</span>
-                <div class="tag-group">
-                    ${createSearchableTag('id', video.id)}
-                </div>
-            </div>
-
-            <div class="modal-info-section">
-                <span class="info-label">Categories:</span>
-                <div class="tag-group">
-                    ${video.categories.map(cat => createSearchableTag('category', cat)).join('')}
-                </div>
-            </div>
-
-            <div class="modal-info-section">
-                <span class="info-label">Actor:</span>
-                <div class="tag-group">
-                    ${video.actors.map(actor => createSearchableTag('actor', actor)).join('')}
-                </div>
-            </div>
-
-            <div class="meta-list">
-                <div><span class="info-label">Year:</span> <span class="meta-value">${video.year}</span></div>
-                <div><span class="info-label">Country:</span> <span class="meta-value">${video.country}</span></div>
-                <div><span class="info-label">Director:</span> <span class="meta-value">${video.director}</span></div>
-                <div><span class="info-label">Writer:</span> <span class="meta-value">${video.writer}</span></div>
-                <div><span class="info-label">Duration:</span> <span class="meta-value">${video.duration}</span></div>
-                <div><span class="info-label">Release:</span> <span class="meta-value">${video.release_date}</span></div>
-            </div>
-        `;
-        
+        const createSearchableTag = (type, value) => `<a href="#" class="tag-item searchable" data-type="${type}" data-value="${value}">${value}</a>`;
+        const videoDetailContent = `<h2 class="modal-main-title">${video.title}</h2><div class="modal-poster"><img src="${video.poster}" alt="${video.title} Poster"></div><a href="player.html?id=${video.id}" target="_blank" class="btn btn-watch-online">Watch Online</a><div class="modal-info-section"><span class="info-label">ID Code:</span><div class="tag-group">${createSearchableTag('id', video.id)}</div></div><div class="modal-info-section"><span class="info-label">Categories:</span><div class="tag-group">${video.categories.map(cat => createSearchableTag('category', cat)).join('')}</div></div><div class="modal-info-section"><span class="info-label">Actor:</span><div class="tag-group">${video.actors.map(actor => createSearchableTag('actor', actor)).join('')}</div></div><div class="meta-list"><div><span class="info-label">Year:</span> <span class="meta-value">${video.year}</span></div><div><span class="info-label">Country:</span> <span class="meta-value">${video.country}</span></div><div><span class="info-label">Director:</span> <span class="meta-value">${video.director}</span></div><div><span class="info-label">Writer:</span> <span class="meta-value">${video.writer}</span></div><div><span class="info-label">Duration:</span> <span class="meta-value">${video.duration}</span></div><div><span class="info-label">Release:</span> <span class="meta-value">${video.release_date}</span></div></div>`;
         modal.querySelector('.modal-content').classList.add('detail-modal-content');
         modalBody.innerHTML = videoDetailContent;
         modal.classList.add('active');
     }
-
     function closeModal() {
         modal.classList.remove('active');
         modal.querySelector('.modal-content').classList.remove('detail-modal-content');
     }
-
-    // === FUNGSI PENCARIAN BARU ===
     function performSearch(type, value) {
         let searchResult = [];
-        // Kita cari dari 'currentVideos' yang sedang aktif
         switch (type) {
-            case 'id':
-                searchResult = currentVideos.filter(video => video.id === value);
-                break;
-            case 'category':
-                searchResult = currentVideos.filter(video => video.categories.includes(value));
-                break;
-            case 'actor':
-                searchResult = currentVideos.filter(video => video.actors.includes(value));
-                break;
+            case 'id': searchResult = currentVideos.filter(video => video.id === value); break;
+            case 'category': searchResult = currentVideos.filter(video => video.categories.includes(value)); break;
+            case 'actor': searchResult = currentVideos.filter(video => video.actors.includes(value)); break;
         }
-        
-        // Tampilkan hasil pencarian di grid utama
         displayVideos(searchResult);
-        // Tampilkan juga di kolom search untuk konsistensi
-        searchInput.value = value;
+        desktopSearchInput.value = value;
+        mobileSearchInput.value = value;
     }
-
-    // --- EVENT LISTENERS ---
-
-    // Listener untuk filter kategori utama (Censored/Uncensored)
-    filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const jsonFile = button.dataset.file;
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            loadVideos(jsonFile);
-        });
-    });
-
-    // Listener untuk search manual
-    searchInput.addEventListener('input', (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        const searchedVideos = currentVideos.filter(video => 
-            video.title.toLowerCase().includes(searchTerm) || 
-            video.actors.some(actor => actor.toLowerCase().includes(searchTerm)) ||
-            video.id.toLowerCase().includes(searchTerm)
-        );
-        displayVideos(searchedVideos);
-    });
-    
-    // === LISTENER MODAL DI-UPGRADE ===
-    // Sekarang bisa menangani klik pada tag yang bisa dicari
+    filterButtons.forEach(button => button.addEventListener('click', () => {
+        const jsonFile = button.dataset.file;
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        loadVideos(jsonFile);
+    }));
     modalBody.addEventListener('click', (e) => {
         const searchableTag = e.target.closest('.searchable');
-        if (searchableTag) {
-            e.preventDefault(); // Mencegah link '#' berpindah halaman
-            const type = searchableTag.dataset.type;
-            const value = searchableTag.dataset.value;
-            performSearch(type, value);
-            closeModal();
-        }
+        if (searchableTag) { e.preventDefault(); const type = searchableTag.dataset.type; const value = searchableTag.dataset.value; performSearch(type, value); closeModal(); }
     });
-
     closeModalBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-    });
-
-    // --- INITIAL LOAD ---
-    loadVideos('censored.json');
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 });
