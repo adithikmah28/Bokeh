@@ -4,16 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Now Playing... | MiyabiFlix</title>
-    
-    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
-    <!-- Link ke CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="player-page-body">
@@ -24,9 +18,8 @@
             <h1 id="videoTitle">Loading...</h1>
         </div>
         
-        <div id="videoPlayerWrapper">
-            <!-- Video tag ini akan dikontrol oleh HLS.js -->
-            <video id="videoPlayer" controls autoplay playsinline></video>
+        <div class="iframe-container">
+            <iframe id="videoPlayerIframe" src="" frameborder="0" allowfullscreen allow="autoplay"></iframe>
         </div>
 
         <div class="video-info">
@@ -34,11 +27,6 @@
         </div>
     </div>
     
-    <!-- Library HLS.js untuk memutar video .m3u8 -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    
-    <!-- Link ke Player JavaScript -->
     <script src="player.js"></script>
-
 </body>
 </html>
