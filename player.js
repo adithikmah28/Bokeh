@@ -1,77 +1,66 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
-    // --- 1. Konfigurasi ---
-    const API_DETAIL_URL = 'https://avdbapi.com/api.php/provide/vod?ac=detail&ids=';
-
-    // --- 2. DOM Elements ---
+    // --- DOM Elements ---
     const videoTitle = document.getElementById('videoTitle');
     const videoActress = document.getElementById('videoActress');
-    const videoPlayerWrapper = document.getElementById('videoPlayerWrapper');
-    const videoPlayer = document.getElementById('videoPlayer');
+    const iframePlayer = document.getElementById('videoPlayerIframe');
+    const videoInfo = document.querySelector('.video-info');
 
-    // --- 3. Fungsi Player Utama ---
-    async function initPlayer() {
-        // 1. Dapatkan ID dari URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const videoId = urlParams.get('id');
+    // --- Data Files ---
+    // Daftar semua file JSON yang mungkin berisi video
+    const dataFiles = ['censored.json', 'uncensored.json'];
 
-        if (!videoId) {
-            displayError("Video ID not found in URL.");
-            return;
-        }
-
-        try {
-            // 2. Ambil data detail video dari API
-            const response = await fetch(`${API_DETAIL_URL}${videoId}`);
-            if (!response.ok) throw new Error(`API request failed with status ${response.status}`);
-            
-            const data = await response.json();
-            if (!data.list || data.list.length === 0) throw new Error("Video not found in API response.");
-            
-            const videoDetails = data.list[0];
-
-            // 3. Tampilkan informasi
-            videoTitle.textContent = videoDetails.vod_name;
-            videoActress.textContent = videoDetails.vod_actor || 'Unknown';
-            document.title = `${videoDetails.vod_name} | MiyabiFlix`;
-
-            // 4. Proses link video .m3u8
-            // Contoh format: "BD$$$https://.../index.m3u8#HD$$$..."
-            const playUrlString = videoDetails.vod_play_url;
-            const urlParts = playUrlString.split('$$$');
-            const m3u8Url = urlParts.length > 1 ? urlParts[1].split('#')[0] : null;
-
-            if (!m3u8Url) throw new Error("Could not parse M3U8 URL from API response.");
-
-            // 5. Inisialisasi HLS.js
-            if (Hls.isSupported()) {
-                const hls = new Hls();
-                hls.loadSource(m3u8Url);
-                hls.attachMedia(videoPlayer);
-                hls.on(Hls.Events.MANIFEST_PARSED, function () {
-                    videoPlayer.play();
-                });
-            } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
-                // Untuk browser native support seperti Safari
-                videoPlayer.src = m3u8Url;
-                videoPlayer.addEventListener('loadedmetadata', function () {
-                    videoPlayer.play();
-                });
-            } else {
-                displayError("Your browser does not support HLS video playback.");
+    /** Fungsi untuk mencari video di semua file JSON */
+    async function findVideoById(id) {
+        for (const file of dataFiles) {
+            try {
+                const response = await fetch(file);
+                if (!response.ok) continue; // Lanjut ke file berikutnya jika gagal
+                const videos = await response.json();
+                const foundVideo = videos.find(video => video.id === id);
+                if (foundVideo) {
+                    return foundVideo; // Kembalikan video jika ditemukan
+                }
+            } catch (error) {
+                console.error(`Error loading or parsing ${file}:`, error);
+                continue;
             }
-
-        } catch (error) {
-            console.error("Failed to initialize player:", error);
-            displayError(error.message);
         }
+        return null; // Kembalikan null jika tidak ditemukan di semua file
     }
 
-    const displayError = (message) => {
-        videoPlayerWrapper.innerHTML = `<p style="text-align:center; padding: 20px; font-size:1.2rem; color: #ff5555;">Error: ${message}</p>`;
-        videoTitle.textContent = "Playback Error";
-    };
+    /** Fungsi untuk menampilkan error */
+    function displayError(message) {
+        videoTitle.textContent = "Error";
+        videoActress.textContent = "N/A";
+        iframePlayer.parentElement.innerHTML = `<p style="text-align:center; padding: 20px; font-size:1.2rem;">${message}</p>`;
+    }
 
-    // --- Jalankan player saat halaman dimuat ---
-    initPlayer();
+    // --- Main Logic ---
+    try {
+        // 1. Dapatkan ID dari URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const videoId = parseInt(urlParams.get('id'));
+
+        if (!videoId) {
+            throw new Error("Video ID not found in URL.");
+        }
+
+        // 2. Cari data video berdasarkan ID
+        const video = await findVideoById(videoId);
+
+        if (!video) {
+            throw new Error("Video with this ID could not be found.");
+        }
+
+        // 3. Tampilkan informasi dan iframe
+        document.title = `${video.title} | MiyabiFlix`;
+        videoTitle.textContent = video.title;
+        videoActress.textContent = video.actress;
+        iframePlayer.src = video.iframe_url;
+
+    } catch (error) {
+        console.error("Player Error:", error);
+        displayError(error.message);
+    }
 });
