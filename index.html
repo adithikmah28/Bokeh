@@ -1,21 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- Ganti seluruh <head> di index.html dengan ini -->
 <head>
     <meta charset="UTF-8">
-    
-    <!-- INI PERINTAH PALING PENTING UNTUK MODE SELULER -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>MiyabiFlix - Exclusive JAV Collection</title>
-
-    <!-- Google Fonts & Font Awesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
-    <!-- Link ke Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -29,7 +21,7 @@
                     <li class="nav-item mobile-search-container">
                         <div class="search-container">
                             <input type="text" id="mobileSearchInput" class="search-input" placeholder="Search...">
-                            <button class="action-btn"><i class="fas fa-search"></i></button>
+                            <button class="action-btn" aria-label="Search"><i class="fas fa-search"></i></button>
                         </div>
                     </li>
                     <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
@@ -39,7 +31,7 @@
 
                 <div class="search-container desktop-search-container">
                     <input type="text" id="desktopSearchInput" class="search-input" placeholder="Search title, actor, or ID...">
-                    <button class="action-btn"><i class="fas fa-search"></i></button>
+                    <button class="action-btn" aria-label="Search"><i class="fas fa-search"></i></button>
                 </div>
                 
                 <div class="nav-actions">
@@ -66,7 +58,7 @@
                     </div>
                 </div>
                 <div id="videoGrid" class="video-grid">
-                    <!-- Video cards will be loaded here by JavaScript -->
+                    <!-- JS will populate this -->
                 </div>
             </div>
         </section>
@@ -75,25 +67,23 @@
     <footer class="footer">
         <div class="container">
             <div class="age-notice">
-                <p><i class="fas fa-exclamation-triangle"></i> This website contains mature content intended for adults 18+ only. By continuing, you confirm you are of legal age.</p>
+                <p><i class="fas fa-exclamation-triangle"></i> This website contains mature content intended for adults 18+ only.</p>
             </div>
             <div class="footer-copyright">
-                © 2023 MiyabiFlix. All Rights Reserved.
+                © 2024 MiyabiFlix. All Rights Reserved.
             </div>
         </div>
     </footer>
 
-    <!-- MODAL (Wadah ini harus ada di root body) -->
     <div id="modal" class="modal">
         <div class="modal-content">
-            <button id="closeModalBtn" class="close-modal-btn">×</button>
+            <button id="closeModalBtn" class="close-modal-btn" aria-label="Close modal">×</button>
             <div id="modalBody" class="modal-body">
-                <!-- Modal content will be dynamically inserted here -->
+                <!-- JS will populate this -->
             </div>
         </div>
     </div>
     
     <script src="script.js"></script>
-
 </body>
 </html>
