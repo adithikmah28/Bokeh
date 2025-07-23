@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 1. Konfigurasi API ---
     const API_URL = 'https://avdbapi.com/api.php/provide/vod';
     let allApiVideos = []; // Untuk menyimpan semua data video dari API
+    let isGridListenerAttached = false; // Flag untuk memastikan event listener hanya dipasang sekali
 
     // --- 2. DOM ELEMENTS ---
     const videoGrid = document.getElementById('videoGrid');
@@ -29,7 +30,38 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const data = await response.json();
             allApiVideos = data.list; // Simpan data asli
-            displayVideos(allApiVideos); // Tampilkan semua video saat pertama kali load
+            displayVideos(allApiVideos); // Tampilkan semua video
+
+            // === KUNCI PERBAIKAN DI SINI ===
+            // Pasang event listener untuk klik poster HANYA SETELAH data siap.
+            if (!isGridListenerAttached) {
+                videoGrid.addEventListener('click', (e) => {
+                    const card = e.target.closest('.video-card');
+                    if (!card) return;
+                    
+                    const videoId = parseInt(card.dataset.id);
+                    // Sekarang `allApiVideos` dijamin sudah berisi data
+                    const video = allApiVideos.find(v => v.vod_id === videoId);
+
+                    if (video) {
+                        const videoDetailContent = `
+                            <div class="modal-poster">
+                                <img src="${video.vod_pic}" alt="${video.vod_name}">
+                            </div>
+                            <h2>${video.vod_name}</h2>
+                            <h3>Starring: ${video.vod_actor || 'Unknown'}</h3>
+                            <p>Duration: ${video.vod_duration || 'N/A'}</p>
+                            <div class="tags">
+                                <span>${video.type_name}</span>
+                            </div>
+                            <button data-videoid="${video.vod_id}" class="btn btn-primary play-btn"><i class="fas fa-play"></i> Watch Now</button>
+                        `;
+                        openModal(videoDetailContent);
+                    }
+                });
+                isGridListenerAttached = true; // Tandai bahwa listener sudah terpasang
+            }
+
         } catch (error) {
             console.error("Could not fetch videos:", error);
             videoGrid.innerHTML = '<p class="no-results">Failed to load videos. Please try again later.</p>';
@@ -47,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
         videoArray.forEach(video => {
             const videoCard = document.createElement('div');
             videoCard.className = 'video-card';
-            videoCard.dataset.id = video.vod_id; // Gunakan vod_id dari API
+            videoCard.dataset.id = video.vod_id;
             videoCard.innerHTML = `
                 <div class="card-banner">
                     <img src="${video.vod_pic}" alt="${video.vod_name} Poster" loading="lazy">
@@ -76,18 +108,17 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- 4. EVENT LISTENERS ---
-
-    // Filter (sekarang memfilter data yang sudah disimpan)
-    filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            // Logika filter saat ini tidak bisa bekerja langsung dengan API ini
-            // karena API tidak menyediakan kategori seperti yang kita buat.
-            // Untuk sementara, kita buat tombol filter hanya mengubah style saja.
-            // Atau, bisa diimplementasikan jika Anda tahu parameter filter di API-nya.
-            console.warn("Filtering logic needs API parameter support.");
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-        });
+    
+    // Event listener untuk tombol 'Watch Now' di dalam modal (sudah benar)
+    modalBody.addEventListener('click', (e) => {
+        const playButton = e.target.closest('.play-btn');
+        if (playButton) {
+            const videoId = playButton.dataset.videoid;
+            if (videoId) {
+                window.open(`player.html?id=${videoId}`, '_blank');
+                closeModal();
+            }
+        }
     });
 
     // Search (sekarang mencari dari data yang sudah disimpan)
@@ -98,41 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
             (video.vod_actor && video.vod_actor.toLowerCase().includes(searchTerm))
         );
         displayVideos(searchedVideos);
-    });
-    
-    // Open video detail modal
-    videoGrid.addEventListener('click', (e) => {
-        const card = e.target.closest('.video-card');
-        if (!card) return;
-        const videoId = parseInt(card.dataset.id);
-        const video = allApiVideos.find(v => v.vod_id === videoId);
-        if (video) {
-            const videoDetailContent = `
-                <div class="modal-poster">
-                    <img src="${video.vod_pic}" alt="${video.vod_name}">
-                </div>
-                <h2>${video.vod_name}</h2>
-                <h3>Starring: ${video.vod_actor || 'Unknown'}</h3>
-                <p>Duration: ${video.vod_duration || 'N/A'}</p>
-                <div class="tags">
-                    <span>${video.type_name}</span>
-                </div>
-                <button data-videoid="${video.vod_id}" class="btn btn-primary play-btn"><i class="fas fa-play"></i> Watch Now</button>
-            `;
-            openModal(videoDetailContent);
-        }
-    });
-
-    // Event listener untuk tombol 'Watch Now' di dalam modal
-    modalBody.addEventListener('click', (e) => {
-        const playButton = e.target.closest('.play-btn');
-        if (playButton) {
-            const videoId = playButton.dataset.videoid;
-            if (videoId) {
-                window.open(`player.html?id=${videoId}`, '_blank');
-                closeModal();
-            }
-        }
     });
 
     // Sisa event listener lainnya (Login, Hamburger, dll.)
