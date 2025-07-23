@@ -3,20 +3,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- DOM ELEMENTS ---
     const videoGrid = document.getElementById('videoGrid');
     const filterButtons = document.querySelectorAll('.filter-btn');
-    const searchInput = document.getElementById('searchInput');
-    const modal = document.getElementById('modal');
-    const modalBody = document.getElementById('modalBody');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    
-    let currentVideos = []; // Cache untuk data JSON yang aktif
+    // ... elemen lainnya sama
+
+    let currentVideos = [];
 
     // --- FUNCTIONS ---
 
-    async function loadVideos(jsonFile) {
+    // PERUBAHAN DI SINI: Fungsi ini sekarang menambahkan prefix 'data/'
+    async function loadVideos(jsonFilename) {
+        const filePath = `data/${jsonFilename}`; // Tambahkan path folder di sini
         videoGrid.innerHTML = '<p class="no-results">Loading videos...</p>';
         try {
-            const response = await fetch(jsonFile);
-            if (!response.ok) throw new Error(`Cannot load ${jsonFile}`);
+            const response = await fetch(filePath);
+            if (!response.ok) throw new Error(`Cannot load ${filePath}`);
             const videos = await response.json();
             currentVideos = videos;
             displayVideos(currentVideos);
@@ -36,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         videoArray.forEach(video => {
             const videoCard = document.createElement('div');
             videoCard.className = 'video-card';
+            // ... isi innerHTML sama seperti sebelumnya
             videoCard.innerHTML = `
                 <div class="card-banner">
                     <img src="${video.poster}" alt="${video.title} Poster" loading="lazy">
@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
             
-            // Pasang listener langsung di setiap kartu
             videoCard.addEventListener('click', () => {
                 const videoDetailContent = `
                     <div class="modal-poster">
@@ -63,6 +62,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ... sisa fungsi (openModal, closeModal) dan event listener lainnya sama ...
+    // ... TIDAK ADA PERUBAHAN DI SINI ...
+    const searchInput = document.getElementById('searchInput');
+    const modal = document.getElementById('modal');
+    const modalBody = document.getElementById('modalBody');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    
     function openModal(content) {
         modalBody.innerHTML = content;
         modal.classList.add('active');
@@ -71,20 +77,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function closeModal() {
         modal.classList.remove('active');
     }
-
-    // --- EVENT LISTENERS ---
-
+    
     filterButtons.forEach(button => {
         button.addEventListener('click', () => {
             const jsonFile = button.dataset.file;
             filterButtons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
-            loadVideos(jsonFile);
+            loadVideos(jsonFile); // Tidak perlu ubah di sini, fungsi loadVideos sudah handle
         });
     });
-
-    // ... sisa event listener (search, close modal, dll.) sama seperti sebelumnya ...
-
+    
     closeModalBtn.addEventListener('click', closeModal);
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
@@ -93,5 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- INITIAL LOAD ---
-    loadVideos('censored.json');
+    // Panggil dengan nama file saja, fungsi loadVideos akan menambahkan path 'data/'
+    loadVideos('censored.json'); 
 });
