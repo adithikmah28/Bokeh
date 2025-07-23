@@ -35,9 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error("Network response was not ok.");
             
             const data = await response.json();
-            totalPages = data.pagecount;
-            displayVideos(data.list);
-            updatePagination(data.page, data.pagecount);
+            // Periksa jika data.list ada sebelum mengakses properti lain
+            if (data && data.list) {
+                totalPages = data.pagecount;
+                displayVideos(data.list);
+                updatePagination(data.page, data.pagecount);
+            } else {
+                displayVideos([]); // Tampilkan grid kosong jika tidak ada data list
+                updatePagination(1, 1);
+            }
 
         } catch (error) {
             console.error("Fetch Error:", error);
@@ -45,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // === FUNGSI INI DIPERBAIKI DENGAN PENGECEKAN KEAMANAN ===
     function displayVideos(videoArray) {
         videoGrid.innerHTML = '';
         if (!videoArray || videoArray.length === 0) {
@@ -56,16 +63,19 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = 'video-card';
             card.dataset.id = video.vod_id;
             
-            // === SOLUSI UNTUK POSTER KOSONG ===
-            // Ganti http:// menjadi https://
-            const securePosterUrl = video.vod_pic.replace(/^http:\/\//i, 'https://');
+            let securePosterUrl = 'https://placehold.co/300x450/111/fff?text=No+Image'; // Gambar default
+
+            // SOLUSI: Cek dulu apakah video.vod_pic ada dan tidak kosong
+            if (video.vod_pic && typeof video.vod_pic === 'string') {
+                securePosterUrl = video.vod_pic.replace(/^http:\/\//i, 'https://');
+            }
 
             card.innerHTML = `
                 <div class="card-banner">
-                    <img src="${securePosterUrl}" alt="${video.vod_name}" loading="lazy" onerror="this.style.display='none'">
+                    <img src="${securePosterUrl}" alt="${video.vod_name}" loading="lazy" onerror="this.src='https://placehold.co/300x450/111/fff?text=Error'">
                 </div>
                 <div class="card-content">
-                    <h3 class="card-title">${video.vod_name}</h3>
+                    <h3 class="card-title">${video.vod_name || 'No Title'}</h3>
                     <p class="card-actors">${video.vod_actor || 'N/A'}</p>
                 </div>
             `;
@@ -74,8 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updatePagination(page, pagecount) {
-        currentPage = parseInt(page);
-        totalPages = parseInt(pagecount);
+        currentPage = parseInt(page) || 1;
+        totalPages = parseInt(pagecount) || 1;
         currentPageSpan.textContent = `Page ${currentPage}`;
         prevPageBtn.disabled = currentPage <= 1;
         nextPageBtn.disabled = currentPage >= totalPages;
@@ -84,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 5. Event Listeners ---
     videoGrid.addEventListener('click', e => {
         const card = e.target.closest('.video-card');
-        if (card) {
+        if (card && card.dataset.id) {
             window.open(`player.html?id=${card.dataset.id}`, '_blank');
         }
     });
