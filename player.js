@@ -1,16 +1,14 @@
 document.addEventListener('DOMContentLoaded', async () => {
-
-    // ... DOM Elements sama ...
+    // --- DOM Elements ---
     const playerContainer = document.querySelector('.player-container');
     const videoTitle = document.getElementById('videoTitle');
     const videoActress = document.getElementById('videoActress');
     const iframePlayer = document.getElementById('videoPlayerIframe');
 
-    // PERUBAHAN DI SINI: Tambahkan path 'data/' ke nama file
+    // --- Data Files ---
     const dataFiles = ['data/censored.json', 'data/uncensored.json'];
 
     function displayError(message) {
-        // ... fungsi displayError sama persis, tidak perlu diubah ...
         if (playerContainer) {
             playerContainer.innerHTML = `
                 <div class="player-header">
@@ -25,7 +23,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function findVideoById(id) {
-        // Tidak ada perubahan di sini, karena 'dataFiles' sudah berisi path yang benar
         for (const file of dataFiles) {
             try {
                 const response = await fetch(file);
@@ -41,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return null;
     }
 
-    // ... Main Logic sama persis, tidak perlu diubah ...
+    // --- Main Logic ---
     try {
         const urlParams = new URLSearchParams(window.location.search);
         const videoId = urlParams.get('id'); 
@@ -58,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         document.title = `${video.title} | MiyabiFlix`;
         videoTitle.textContent = video.title;
-        videoActress.textContent = video.actress;
+        videoActress.textContent = video.actors.join(', ');
         iframePlayer.src = video.iframe_url;
 
     } catch (error) {
