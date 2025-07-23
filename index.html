@@ -3,84 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiyabiFlix - Exclusive JAV Collection</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <title>MiyabiFlix - Powered by AVDBAPI</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
-
     <header class="header">
         <div class="container">
             <nav class="navbar">
                 <a href="index.html" class="nav-logo">MiyabiFlix</a>
-                
-                <ul class="nav-menu">
-                    <li class="nav-item mobile-search-container">
-                        <div class="search-container">
-                            <input type="text" id="mobileSearchInput" class="search-input" placeholder="Search...">
-                            <button class="action-btn" aria-label="Search"><i class="fas fa-search"></i></button>
-                        </div>
-                    </li>
-                    <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Categories</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Actresses</a></li>
-                </ul>
-
-                <div class="search-container desktop-search-container">
-                    <input type="text" id="desktopSearchInput" class="search-input" placeholder="Search title, actor, or ID...">
-                    <button class="action-btn" aria-label="Search"><i class="fas fa-search"></i></button>
-                </div>
-                
-                <div class="nav-actions">
-                    <button class="btn btn-primary" id="loginBtn">Login</button>
-                </div>
-
-                <div class="hamburger">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search JAV Code or Keyword...">
+                    <button id="searchBtn" aria-label="Search"><i class="fas fa-search"></i></button>
                 </div>
             </nav>
         </div>
     </header>
 
     <main>
-        <section class="videos-section">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Latest Collection</h2>
-                    <div class="category-filters">
-                        <button class="filter-btn active" data-file="censored.json">Censored</button>
-                        <button class="filter-btn" data-file="uncensored.json">Uncensored</button>
-                    </div>
-                </div>
-                <div id="videoGrid" class="video-grid">
-                    <!-- JS will populate this -->
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="footer">
         <div class="container">
-            <div class="age-notice">
-                <p><i class="fas fa-exclamation-triangle"></i> This website contains mature content intended for adults 18+ only.</p>
+            <div class="category-filters">
+                <button class="filter-btn active" data-type="latest" data-id="">Latest</button>
+                <button class="filter-btn" data-type="category" data-id="1">Censored</button>
+                <button class="filter-btn" data-type="category" data-id="2">Uncensored</button>
+                <button class="filter-btn" data-type="category" data-id="3">Leaked</button>
+                <button class="filter-btn" data-type="category" data-id="4">Amateur</button>
             </div>
-            <div class="footer-copyright">
-                © 2024 MiyabiFlix. All Rights Reserved.
+
+            <div id="videoGrid" class="video-grid">
+                <!-- Loading indicator -->
+                <div class="loading-spinner"></div>
+            </div>
+
+            <div class="pagination">
+                <button id="prevPageBtn" class="page-btn" disabled>Previous</button>
+                <span id="currentPageSpan">Page 1</span>
+                <button id="nextPageBtn" class="page-btn">Next</button>
             </div>
         </div>
-    </footer>
-
+    </main>
+    
+    <!-- Modal tetap ada untuk detail, tapi akan diisi oleh API -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <button id="closeModalBtn" class="close-modal-btn" aria-label="Close modal">×</button>
-            <div id="modalBody" class="modal-body">
-                <!-- JS will populate this -->
-            </div>
+            <div id="modalBody" class="modal-body"></div>
         </div>
     </div>
     
