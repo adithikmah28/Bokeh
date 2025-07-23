@@ -72,3 +72,33 @@
     font-weight: 400;
     color: var(--text-muted);
 }
+/* --- PLAYER ERROR STYLES (Tambahkan di akhir) --- */
+.error-message-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: var(--bg-color);
+    border-radius: var(--border-radius);
+    padding: 40px;
+    margin-top: 20px;
+    border: 1px solid #444;
+    min-height: 300px;
+}
+
+.error-message-container h1 {
+    color: #ff5555; /* Warna merah untuk error */
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+.error-message-container h1 i {
+    margin-right: 10px;
+}
+
+.error-message-container p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 500px;
+}
