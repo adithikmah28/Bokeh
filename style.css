@@ -88,3 +88,77 @@ main { padding-top: 40px; }
 @media (max-width: 768px) {
     .video-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
 }
+/* --- CUSTOM MODAL DETAIL STYLES (Tambahkan di akhir) --- */
+.modal-content.detail-modal-content {
+    max-width: 700px; /* Lebarkan modal untuk detail */
+    background-color: #1f2024; /* Warna background dari screenshot */
+    border: 1px solid #333;
+    padding: 30px;
+}
+
+.modal-main-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.btn-watch-online {
+    display: inline-block;
+    background-color: #1db954; /* Warna hijau dari screenshot */
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-bottom: 30px;
+    transition: background-color 0.2s;
+}
+
+.btn-watch-online:hover {
+    background-color: #1ed760;
+}
+
+.modal-info-section {
+    margin-bottom: 15px;
+}
+
+.info-label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #4bd3be; /* Warna teal dari screenshot */
+    margin-bottom: 8px;
+}
+
+.tag-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag-item {
+    background-color: #6c5ce7; /* Warna ungu dari screenshot */
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.meta-list {
+    margin-top: 25px;
+    font-size: 1rem;
+    line-height: 1.8;
+}
+
+.meta-list .info-label {
+    display: inline-block;
+    width: 120px; /* Ratakan label */
+    margin-bottom: 0;
+}
+
+.meta-value {
+    color: #fff;
+}
