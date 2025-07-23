@@ -109,3 +109,68 @@ main { padding-top: 100px; }
     .card-content h3 { font-size: 0.85rem; } .card-content p { font-size: 0.75rem; }
     .filter-btn { padding: 5px 12px; font-size: 0.8rem; }
 }
+/* --- PLAYER PAGE STYLES (Tambahkan di akhir file) --- */
+.player-page-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #000;
+}
+
+.player-container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+}
+
+.player-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.player-header h1 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    text-align: right;
+}
+
+.back-btn {
+    color: var(--text-muted);
+    font-size: 1rem;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.back-btn:hover {
+    color: var(--primary-color);
+}
+
+#videoPlayerWrapper {
+    width: 100%;
+    background-color: #000;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+#videoPlayerWrapper video {
+    width: 100%;
+    height: 100%;
+}
+
+.video-info {
+    margin-top: 20px;
+}
+
+.video-info h2 {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.video-info h2 span {
+    font-weight: 400;
+    color: var(--text-muted);
+}
