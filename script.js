@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevPageBtn = document.getElementById('prevPageBtn');
     const nextPageBtn = document.getElementById('nextPageBtn');
     const currentPageSpan = document.getElementById('currentPageSpan');
-    // ... sisa elemen modal
 
     // --- 3. State Management ---
     let currentPage = 1;
@@ -20,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 4. Fungsi Inti ---
 
-    /** Fungsi utama untuk mengambil data dari API */
     async function fetchVideos(page = 1) {
         videoGrid.innerHTML = '<div class="loading-spinner"></div>';
         
@@ -47,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /** Fungsi untuk menampilkan video ke grid */
     function displayVideos(videoArray) {
         videoGrid.innerHTML = '';
         if (!videoArray || videoArray.length === 0) {
@@ -57,10 +54,15 @@ document.addEventListener('DOMContentLoaded', () => {
         videoArray.forEach(video => {
             const card = document.createElement('div');
             card.className = 'video-card';
-            card.dataset.id = video.vod_id; // Simpan ID untuk modal
+            card.dataset.id = video.vod_id;
+            
+            // === SOLUSI UNTUK POSTER KOSONG ===
+            // Ganti http:// menjadi https://
+            const securePosterUrl = video.vod_pic.replace(/^http:\/\//i, 'https://');
+
             card.innerHTML = `
                 <div class="card-banner">
-                    <img src="${video.vod_pic}" alt="${video.vod_name}" loading="lazy">
+                    <img src="${securePosterUrl}" alt="${video.vod_name}" loading="lazy" onerror="this.style.display='none'">
                 </div>
                 <div class="card-content">
                     <h3 class="card-title">${video.vod_name}</h3>
@@ -71,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /** Fungsi untuk memperbarui tombol paginasi */
     function updatePagination(page, pagecount) {
         currentPage = parseInt(page);
         totalPages = parseInt(pagecount);
@@ -81,8 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 5. Event Listeners ---
-
-    // Klik pada kartu video
     videoGrid.addEventListener('click', e => {
         const card = e.target.closest('.video-card');
         if (card) {
@@ -90,7 +89,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Filter kategori
+    searchBtn.addEventListener('click', () => {
+        const keyword = searchInput.value.trim();
+        if (keyword) {
+            currentFilterType = 'search';
+            currentFilterValue = encodeURIComponent(keyword);
+            currentPage = 1;
+            fetchVideos(currentPage);
+        }
+    });
+    searchInput.addEventListener('keyup', e => { if (e.key === 'Enter') searchBtn.click(); });
+    
     filterButtons.forEach(btn => {
         btn.addEventListener('click', () => {
             filterButtons.forEach(b => b.classList.remove('active'));
@@ -103,29 +112,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Pencarian
-    searchBtn.addEventListener('click', () => {
-        const keyword = searchInput.value.trim();
-        if (keyword) {
-            currentFilterType = 'search';
-            currentFilterValue = encodeURIComponent(keyword);
-            currentPage = 1;
-            fetchVideos(currentPage);
-        }
-    });
-    searchInput.addEventListener('keyup', e => { if (e.key === 'Enter') searchBtn.click(); });
-    
-    // Paginasi
     nextPageBtn.addEventListener('click', () => {
-        if (currentPage < totalPages) {
-            fetchVideos(currentPage + 1);
-        }
+        if (currentPage < totalPages) { fetchVideos(currentPage + 1); }
     });
-
     prevPageBtn.addEventListener('click', () => {
-        if (currentPage > 1) {
-            fetchVideos(currentPage - 1);
-        }
+        if (currentPage > 1) { fetchVideos(currentPage - 1); }
     });
 
     // --- 6. Initial Load ---
