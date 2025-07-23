@@ -18,7 +18,37 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header class="header"><!-- ... navigasi ... --></header>
+    <!-- index.html -->
+
+<header class="header">
+    <div class="container">
+        <nav class="navbar">
+            <a href="index.html" class="nav-logo">MiyabiFlix</a>
+            
+            <!-- ELEMEN YANG HILANG ATAU SALAH ADA DI SINI -->
+            <div class="search-container">
+                <!-- Pastikan input ini ada dan memiliki id="searchInput" -->
+                <input type="text" id="searchInput" class="search-input" placeholder="Search title, actor, or ID...">
+                <button class="action-btn" id="searchBtn"><i class="fas fa-search"></i></button>
+            </div>
+            <!-- SELESAI -->
+            
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">Categories</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">Actresses</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="btn btn-primary" id="loginBtn">Login</button>
+            </div>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </nav>
+    </div>
+</header>
 
     <main>
         <section class="videos-section">
