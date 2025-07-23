@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // === FUNGSI INI DIPERBAIKI ===
+    // === FUNGSI INI DIPERBAIKI DENGAN LOGIKA YANG LEBIH LONGGAR ===
     function displayVideos(videoArray) {
         videoGrid.innerHTML = '';
         if (videoArray.length === 0) {
@@ -42,25 +42,30 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         videoArray.forEach(video => {
-            // Lanjutkan hanya jika video memiliki ID dan Judul, ini filter data sampah
-            if (!video || !video.vod_id || !video.vod_name) {
-                return; // Lewati video yang tidak valid
+            // SOLUSI: Filter dilonggarkan. Cukup pastikan video itu ada dan punya ID.
+            // Judul dan gambar bisa kosong, tapi kartu tetap ditampilkan.
+            if (!video || !video.vod_id) {
+                return; // Lewati hanya jika data benar-benar tidak bisa digunakan.
             }
 
             const card = document.createElement('div');
             card.className = 'video-card';
             card.dataset.id = video.vod_id;
             
-            // Gunakan gambar default jika vod_pic tidak ada, lalu ubah ke https jika ada.
+            // Logika yang aman untuk gambar.
             const posterUrl = (video.vod_pic || 'https://placehold.co/300x450/111/fff?text=No+Image').replace(/^http:\/\//i, 'https://');
+            
+            // Logika yang aman untuk judul dan aktor.
+            const title = video.vod_name || 'No Title Available';
+            const actors = video.vod_actor || 'N/A';
 
             card.innerHTML = `
                 <div class="card-banner">
-                    <img src="${posterUrl}" alt="${video.vod_name}" loading="lazy" onerror="this.src='https://placehold.co/300x450/111/fff?text=Error'">
+                    <img src="${posterUrl}" alt="${title}" loading="lazy" onerror="this.src='https://placehold.co/300x450/111/fff?text=Error'">
                 </div>
                 <div class="card-content">
-                    <h3 class="card-title">${video.vod_name}</h3>
-                    <p class="card-actors">${video.vod_actor || 'N/A'}</p>
+                    <h3 class="card-title">${title}</h3>
+                    <p class="card-actors">${actors}</p>
                 </div>
             `;
             videoGrid.appendChild(card);
